@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
 import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:http/http.dart' as http;
 import '../models/service.dart';
 import '../models/product.dart';
 import '../models/review.dart';
@@ -7,22 +8,22 @@ import '../models/cyber_session.dart';
 import 'local_cache_service.dart';
 
 class DataRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // Replace with your actual deployed API URL
+  final String _baseUrl = 'https://api.proinformatique.dev';
   final LocalCacheService _localCacheService = createLocalCacheService();
 
   // --- Services ---
 
   Future<List<Service>> getServices() async {
     try {
-      final QuerySnapshot snapshot = await _firestore.collection('services').get();
-      final services = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Service.fromMap(data);
-      }).toList();
-
-      await _localCacheService.syncServices(services);
-      return services;
+      final response = await http.get(Uri.parse('$_baseUrl/api/services'));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        final services = data.map((item) => Service.fromMap(item)).toList();
+        await _localCacheService.syncServices(services);
+        return services;
+      }
+      return [];
     } catch (e) {
       debugPrint('Error getting services: $e');
       return [];
@@ -31,25 +32,13 @@ class DataRepository {
 
   Future<void> addService(Service service) async {
     try {
-      await _firestore.collection('services').doc(service.id).set(service.toMap());
+      await http.post(
+        Uri.parse('$_baseUrl/api/services'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(service.toMap()),
+      );
     } catch (e) {
       debugPrint('Error adding service: $e');
-    }
-  }
-
-  Future<void> updateService(Service service) async {
-    try {
-      await _firestore.collection('services').doc(service.id).update(service.toMap());
-    } catch (e) {
-      debugPrint('Error updating service: $e');
-    }
-  }
-
-  Future<void> deleteService(String id) async {
-    try {
-      await _firestore.collection('services').doc(id).delete();
-    } catch (e) {
-      debugPrint('Error deleting service: $e');
     }
   }
 
@@ -57,15 +46,14 @@ class DataRepository {
 
   Future<List<Product>> getProducts() async {
     try {
-      final QuerySnapshot snapshot = await _firestore.collection('products').get();
-      final products = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Product.fromMap(data);
-      }).toList();
-
-      await _localCacheService.syncProducts(products);
-      return products;
+      final response = await http.get(Uri.parse('$_baseUrl/api/products'));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        final products = data.map((item) => Product.fromMap(item)).toList();
+        await _localCacheService.syncProducts(products);
+        return products;
+      }
+      return [];
     } catch (e) {
       debugPrint('Error getting products: $e');
       return [];
@@ -74,140 +62,39 @@ class DataRepository {
 
   Future<void> addProduct(Product product) async {
     try {
-      await _firestore.collection('products').doc(product.id).set(product.toMap());
+      await http.post(
+        Uri.parse('$_baseUrl/api/products'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(product.toMap()),
+      );
     } catch (e) {
       debugPrint('Error adding product: $e');
     }
   }
 
-  Future<void> updateProduct(Product product) async {
+  // --- Orders ---
+  Future<List<dynamic>> getOrders() async {
     try {
-      await _firestore.collection('products').doc(product.id).update(product.toMap());
+      final response = await http.get(Uri.parse('$_baseUrl/api/orders'));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      }
+      return [];
     } catch (e) {
-      debugPrint('Error updating product: $e');
-    }
-  }
-
-  Future<void> deleteProduct(String id) async {
-    try {
-      await _firestore.collection('products').doc(id).delete();
-    } catch (e) {
-      debugPrint('Error deleting product: $e');
-    }
-  }
-
-  // --- Reviews ---
-
-  Future<List<Review>> getReviews() async {
-    try {
-      final QuerySnapshot snapshot = await _firestore.collection('reviews').get();
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Review.fromMap(data);
-      }).toList();
-    } catch (e) {
-      debugPrint('Error getting reviews: $e');
+      debugPrint('Error getting orders: $e');
       return [];
     }
   }
 
-  Future<List<Review>> getReviewsForProduct(String productId) async {
+  Future<void> addOrder(Map<String, dynamic> order) async {
     try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('reviews')
-          .where('product_id', isEqualTo: productId)
-          .get();
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Review.fromMap(data);
-      }).toList();
+      await http.post(
+        Uri.parse('$_baseUrl/api/orders'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(order),
+      );
     } catch (e) {
-      debugPrint('Error getting reviews for product: $e');
-      return [];
-    }
-  }
-
-  Future<void> addReview(Review review) async {
-    try {
-      await _firestore.collection('reviews').doc(review.id).set(review.toMap());
-    } catch (e) {
-      debugPrint('Error adding review: $e');
-    }
-  }
-
-  Future<void> deleteReview(String id) async {
-    try {
-      await _firestore.collection('reviews').doc(id).delete();
-    } catch (e) {
-      debugPrint('Error deleting review: $e');
-    }
-  }
-
-  // --- Cyber Tickets ---
-
-  Future<List<CyberTicket>> getCyberTickets() async {
-    try {
-      final QuerySnapshot snapshot = await _firestore.collection('cyber_tickets').get();
-      final tickets = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return CyberTicket.fromMap(data);
-      }).toList();
-      return tickets;
-    } catch (e) {
-      debugPrint('Error getting cyber tickets: $e');
-      return [];
-    }
-  }
-
-  Future<void> addCyberTicket(CyberTicket ticket) async {
-    try {
-      await _firestore.collection('cyber_tickets').doc(ticket.id).set(ticket.toMap());
-    } catch (e) {
-      debugPrint('Error adding ticket: $e');
-    }
-  }
-
-  Future<void> updateCyberTicket(CyberTicket ticket) async {
-    try {
-      await _firestore.collection('cyber_tickets').doc(ticket.id).update(ticket.toMap());
-    } catch (e) {
-      debugPrint('Error updating ticket: $e');
-    }
-  }
-
-  Future<void> deleteCyberTicket(String id) async {
-    try {
-      await _firestore.collection('cyber_tickets').doc(id).delete();
-    } catch (e) {
-      debugPrint('Error deleting ticket: $e');
-    }
-  }
-
-  // --- Computers ---
-
-  Future<List<Computer>> getComputers() async {
-    try {
-      final QuerySnapshot snapshot = await _firestore.collection('computers').get();
-      final computers = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Computer.fromMap(data);
-      }).toList();
-      return computers;
-    } catch (e) {
-      debugPrint('Error getting computers: $e');
-      return [];
-    }
-  }
-
-  Future<void> updateComputer(Computer computer) async {
-    try {
-      await _firestore.collection('computers').doc(computer.id).update(computer.toMap());
-    } catch (e) {
-      debugPrint('Error updating computer: $e');
+      debugPrint('Error adding order: $e');
     }
   }
 }
