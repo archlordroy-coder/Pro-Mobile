@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "buildCommand": "./build.sh",
+  "outputDirectory": "build/web",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
