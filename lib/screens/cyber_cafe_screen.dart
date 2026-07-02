@@ -11,7 +11,8 @@ class CyberCafeScreen extends StatefulWidget {
   State<CyberCafeScreen> createState() => _CyberCafeScreenState();
 }
 
-class _CyberCafeScreenState extends State<CyberCafeScreen> with SingleTickerProviderStateMixin {
+class _CyberCafeScreenState extends State<CyberCafeScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -23,8 +24,11 @@ class _CyberCafeScreenState extends State<CyberCafeScreen> with SingleTickerProv
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _fadeAnimation = Tween<double>(begin: 0, end: 1)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+    _slideAnimation = Tween<Offset>(
+            begin: const Offset(0, 0.2), end: Offset.zero)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _controller.forward();
   }
 
@@ -37,7 +41,7 @@ class _CyberCafeScreenState extends State<CyberCafeScreen> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     final appProvider = context.watch<AppProvider>();
-    
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -83,7 +87,7 @@ class _CyberCafeScreenState extends State<CyberCafeScreen> with SingleTickerProv
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [AppColors.primary, AppColors.secondary],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -104,7 +108,8 @@ class _CyberCafeScreenState extends State<CyberCafeScreen> with SingleTickerProv
           SizedBox(height: 16),
           Text(
             'Cyber Café',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(
+                fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           SizedBox(height: 8),
           Text(
@@ -225,7 +230,9 @@ class _CyberCafeScreenState extends State<CyberCafeScreen> with SingleTickerProv
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: availableCount > 0 ? AppColors.cardTeal.withValues(alpha: 0.2) : AppColors.cardPink.withValues(alpha: 0.2),
+            color: availableCount > 0
+                ? AppColors.cardTeal.withValues(alpha: 0.2)
+                : AppColors.cardPink.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
@@ -234,7 +241,8 @@ class _CyberCafeScreenState extends State<CyberCafeScreen> with SingleTickerProv
                 : 'Tous les ordinateurs sont occupés',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: availableCount > 0 ? AppColors.cardTeal : AppColors.cardPink,
+              color:
+                  availableCount > 0 ? AppColors.cardTeal : AppColors.cardPink,
             ),
           ),
         ),
@@ -272,7 +280,9 @@ class _CyberCafeScreenState extends State<CyberCafeScreen> with SingleTickerProv
   Widget _buildComputerCard(Computer computer) {
     return Container(
       decoration: BoxDecoration(
-        color: computer.isAvailable ? Colors.white : AppColors.textSecondary.withValues(alpha: 0.1),
+        color: computer.isAvailable
+            ? Colors.white
+            : AppColors.textSecondary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: computer.isAvailable ? AppColors.cardTeal : AppColors.cardPink,
@@ -294,7 +304,9 @@ class _CyberCafeScreenState extends State<CyberCafeScreen> with SingleTickerProv
             Icon(
               computer.isAvailable ? Icons.computer : Icons.computer_outlined,
               size: 36,
-              color: computer.isAvailable ? AppColors.cardTeal : AppColors.cardPink,
+              color: computer.isAvailable
+                  ? AppColors.cardTeal
+                  : AppColors.cardPink,
             ),
             const SizedBox(height: 8),
             Text(
@@ -311,7 +323,9 @@ class _CyberCafeScreenState extends State<CyberCafeScreen> with SingleTickerProv
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: computer.isAvailable ? AppColors.cardTeal : AppColors.cardPink,
+                color: computer.isAvailable
+                    ? AppColors.cardTeal
+                    : AppColors.cardPink,
               ),
             ),
             if (!computer.isAvailable && computer.currentUser != null) ...[

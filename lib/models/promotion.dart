@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Promotion {
   final String id;
   final String title;
@@ -59,8 +57,12 @@ class Promotion {
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       imageUrl: map['image_url'] ?? '',
-      startDate: map['start_date'] != null ? DateTime.fromMillisecondsSinceEpoch(map['start_date']) : null,
-      endDate: map['end_date'] != null ? DateTime.fromMillisecondsSinceEpoch(map['end_date']) : null,
+      startDate: map['start_date'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['start_date'])
+          : null,
+      endDate: map['end_date'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['end_date'])
+          : null,
       isActive: map['is_active'] ?? true,
     );
   }
@@ -71,8 +73,10 @@ final List<Promotion> proPromotions = [
   Promotion(
     id: '1',
     title: 'Soldes d\'Été',
-    description: 'Jusqu\'à 30% de réduction sur tous les gadgets personnalisés !',
-    imageUrl: 'https://images.unsplash.com/photo-1461696114087-397271a7aedc?q=80&w=1200&auto=format&fit=crop',
+    description:
+        'Jusqu\'à 30% de réduction sur tous les gadgets personnalisés !',
+    imageUrl:
+        'https://images.unsplash.com/photo-1461696114087-397271a7aedc?q=80&w=1200&auto=format&fit=crop',
     startDate: DateTime.now(),
     endDate: DateTime.now().add(const Duration(days: 30)),
   ),
@@ -80,15 +84,18 @@ final List<Promotion> proPromotions = [
     id: '2',
     title: 'Forfait Cyber',
     description: 'Achetez 5 heures, obtenez 1 heure gratuite !',
-    imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200&auto=format&fit=crop',
+    imageUrl:
+        'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200&auto=format&fit=crop',
     startDate: DateTime.now(),
     endDate: DateTime.now().add(const Duration(days: 15)),
   ),
   Promotion(
     id: '3',
     title: 'Impression Grand Format',
-    description: 'Première commande bénéficie de -20% sur les bannières et roll-ups.',
-    imageUrl: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?q=80&w=1200&auto=format&fit=crop',
+    description:
+        'Première commande bénéficie de -20% sur les bannières et roll-ups.',
+    imageUrl:
+        'https://images.unsplash.com/photo-1558655146-9f40138edfeb?q=80&w=1200&auto=format&fit=crop',
     startDate: DateTime.now(),
     endDate: DateTime.now().add(const Duration(days: 20)),
   ),

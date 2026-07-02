@@ -11,10 +11,9 @@ class ProductsScreen extends StatefulWidget {
   State<ProductsScreen> createState() => _ProductsScreenState();
 }
 
-class _ProductsScreenState extends State<ProductsScreen> with SingleTickerProviderStateMixin {
+class _ProductsScreenState extends State<ProductsScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
@@ -22,12 +21,6 @@ class _ProductsScreenState extends State<ProductsScreen> with SingleTickerProvid
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
-    );
-    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
-    );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
     _animationController.forward();
   }
@@ -57,12 +50,13 @@ class _ProductsScreenState extends State<ProductsScreen> with SingleTickerProvid
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nos Produits', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Nos Produits',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
       ),
-      body: appProvider.isLoading 
+      body: appProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: () => appProvider.fetchData(),
@@ -77,11 +71,12 @@ class _ProductsScreenState extends State<ProductsScreen> with SingleTickerProvid
                 itemCount: appProvider.products.length,
                 itemBuilder: (context, index) {
                   final product = appProvider.products[index];
-                  final rating = appProvider.getAverageRatingForProduct(product.id);
+                  final rating =
+                      appProvider.getAverageRatingForProduct(product.id);
                   final delay = Duration(milliseconds: index * 100);
                   return TweenAnimationBuilder<double>(
                     tween: Tween(begin: 0, end: 1),
-                    duration: Duration(milliseconds: 400) + delay,
+                    duration: const Duration(milliseconds: 400) + delay,
                     curve: Curves.easeOut,
                     builder: (context, value, child) {
                       return Transform.scale(
@@ -94,9 +89,10 @@ class _ProductsScreenState extends State<ProductsScreen> with SingleTickerProvid
                     },
                     child: GestureDetector(
                       onTap: () => Navigator.push(
-                        context, 
-                        MaterialPageRoute(builder: (_) => ProductDetailScreen(product: product))
-                      ),
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  ProductDetailScreen(product: product))),
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -115,27 +111,36 @@ class _ProductsScreenState extends State<ProductsScreen> with SingleTickerProvid
                             Expanded(
                               flex: 3,
                               child: ClipRRect(
-                                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                                child: product.imageUrl.isNotEmpty 
-                                  ? Image.network(
-                                      product.imageUrl,
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return Container(
-                                          color: AppColors.primary.withValues(alpha: 0.1),
-                                          child: const Center(
-                                            child: Icon(Icons.image_not_supported, color: AppColors.primary, size: 40),
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : Container(
-                                      color: AppColors.primary.withValues(alpha: 0.1),
-                                      child: const Center(
-                                        child: Icon(Icons.shopping_bag, color: AppColors.primary, size: 40),
+                                borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(24)),
+                                child: product.imageUrl.isNotEmpty
+                                    ? Image.network(
+                                        product.imageUrl,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Container(
+                                            color: AppColors.primary
+                                                .withValues(alpha: 0.1),
+                                            child: const Center(
+                                              child: Icon(
+                                                  Icons.image_not_supported,
+                                                  color: AppColors.primary,
+                                                  size: 40),
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    : Container(
+                                        color: AppColors.primary
+                                            .withValues(alpha: 0.1),
+                                        child: const Center(
+                                          child: Icon(Icons.shopping_bag,
+                                              color: AppColors.primary,
+                                              size: 40),
+                                        ),
                                       ),
-                                    ),
                               ),
                             ),
                             Expanded(
@@ -144,37 +149,51 @@ class _ProductsScreenState extends State<ProductsScreen> with SingleTickerProvid
                                 padding: const EdgeInsets.all(16),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           product.name,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           product.category,
-                                          style: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.7), fontSize: 12),
+                                          style: TextStyle(
+                                              color: AppColors.textSecondary
+                                                  .withValues(alpha: 0.7),
+                                              fontSize: 12),
                                         ),
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           product.priceDisplay,
-                                          style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 18),
+                                          style: const TextStyle(
+                                              color: AppColors.primary,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18),
                                         ),
                                         Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const Icon(Icons.star, color: Colors.amber, size: 16),
+                                            const Icon(Icons.star,
+                                                color: Colors.amber, size: 16),
                                             const SizedBox(width: 4),
-                                            Text(rating.toStringAsFixed(1), style: const TextStyle(fontSize: 14)),
+                                            Text(rating.toStringAsFixed(1),
+                                                style: const TextStyle(
+                                                    fontSize: 14)),
                                           ],
                                         ),
                                       ],

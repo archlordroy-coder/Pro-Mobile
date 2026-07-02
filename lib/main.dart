@@ -68,10 +68,10 @@ class AdaptiveNavigation extends StatefulWidget {
   State<AdaptiveNavigation> createState() => _AdaptiveNavigationState();
 }
 
-class _AdaptiveNavigationState extends State<AdaptiveNavigation> with SingleTickerProviderStateMixin {
+class _AdaptiveNavigationState extends State<AdaptiveNavigation>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
   final BusinessInfo _businessInfo = const BusinessInfo();
 
   final List<Widget> _screens = [
@@ -98,9 +98,6 @@ class _AdaptiveNavigationState extends State<AdaptiveNavigation> with SingleTick
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
-    );
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.2).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
     );
     _animationController.forward();
   }
@@ -135,14 +132,14 @@ class _AdaptiveNavigationState extends State<AdaptiveNavigation> with SingleTick
               padding: const EdgeInsets.only(right: 16),
               child: Image.asset('logo.png', height: 40),
             ),
-            Text(_businessInfo.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(_businessInfo.name,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         actions: [
-          for (int i = 0; i < _screenTitles.length; i++)
-            _buildWebNavItem(i),
+          for (int i = 0; i < _screenTitles.length; i++) _buildWebNavItem(i),
           const SizedBox(width: 16),
         ],
       ),
@@ -160,7 +157,9 @@ class _AdaptiveNavigationState extends State<AdaptiveNavigation> with SingleTick
           foregroundColor: isSelected ? Colors.white : Colors.white70,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
-        child: Text(_screenTitles[index], style: TextStyle(fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+        child: Text(_screenTitles[index],
+            style: TextStyle(
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
       ),
     );
   }
@@ -187,19 +186,25 @@ class _AdaptiveNavigationState extends State<AdaptiveNavigation> with SingleTick
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildNavItem(0, Icons.home_outlined, Icons.home_rounded, 'Accueil'),
-            _buildNavItem(1, Icons.miscellaneous_services_outlined, Icons.miscellaneous_services_rounded, 'Services'),
+            _buildNavItem(
+                0, Icons.home_outlined, Icons.home_rounded, 'Accueil'),
+            _buildNavItem(1, Icons.miscellaneous_services_outlined,
+                Icons.miscellaneous_services_rounded, 'Services'),
             _buildCenterNavItem(),
-            _buildNavItem(3, Icons.shopping_bag_outlined, Icons.shopping_bag_rounded, 'Produits'),
-            _buildNavItem(4, Icons.contact_support_outlined, Icons.contact_support_rounded, 'Contact'),
-            _buildNavItem(5, Icons.person_outline_rounded, Icons.person_rounded, 'Profil'),
+            _buildNavItem(3, Icons.shopping_bag_outlined,
+                Icons.shopping_bag_rounded, 'Produits'),
+            _buildNavItem(4, Icons.contact_support_outlined,
+                Icons.contact_support_rounded, 'Contact'),
+            _buildNavItem(5, Icons.person_outline_rounded, Icons.person_rounded,
+                'Profil'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(int index, IconData icon, IconData activeIcon, String label) {
+  Widget _buildNavItem(
+      int index, IconData icon, IconData activeIcon, String label) {
     bool isSelected = _selectedIndex == index;
     return GestureDetector(
       onTap: () => _onItemTapped(index),
@@ -208,7 +213,9 @@ class _AdaptiveNavigationState extends State<AdaptiveNavigation> with SingleTick
         curve: Curves.easeInOut,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? AppColors.primary.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -220,7 +227,9 @@ class _AdaptiveNavigationState extends State<AdaptiveNavigation> with SingleTick
               curve: Curves.elasticOut,
               child: Icon(
                 isSelected ? activeIcon : icon,
-                color: isSelected ? AppColors.primary : AppColors.textSecondary.withValues(alpha: 0.5),
+                color: isSelected
+                    ? AppColors.primary
+                    : AppColors.textSecondary.withValues(alpha: 0.5),
                 size: 28,
               ),
             ),
@@ -254,7 +263,9 @@ class _AdaptiveNavigationState extends State<AdaptiveNavigation> with SingleTick
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: isSelected ? AppColors.primary.withValues(alpha: 0.4) : AppColors.primary.withValues(alpha: 0.3),
+              color: isSelected
+                  ? AppColors.primary.withValues(alpha: 0.4)
+                  : AppColors.primary.withValues(alpha: 0.3),
               blurRadius: isSelected ? 20 : 15,
               offset: const Offset(0, 5),
             )
@@ -266,7 +277,8 @@ class _AdaptiveNavigationState extends State<AdaptiveNavigation> with SingleTick
           decoration: BoxDecoration(
             gradient: AppColors.primaryGradient,
             shape: BoxShape.circle,
-            border: isSelected ? Border.all(color: Colors.white, width: 3) : null,
+            border:
+                isSelected ? Border.all(color: Colors.white, width: 3) : null,
           ),
           child: const Icon(Icons.computer, color: Colors.white, size: 30),
         ),

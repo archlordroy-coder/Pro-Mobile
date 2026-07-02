@@ -11,7 +11,8 @@ class AdminLoginScreen extends StatefulWidget {
   State<AdminLoginScreen> createState() => _AdminLoginScreenState();
 }
 
-class _AdminLoginScreenState extends State<AdminLoginScreen> with SingleTickerProviderStateMixin {
+class _AdminLoginScreenState extends State<AdminLoginScreen>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
@@ -49,7 +50,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> with SingleTickerPr
       setState(() => _isLoading = true);
 
       final appProvider = Provider.of<AppProvider>(context, listen: false);
-      
+
       if (appProvider.verifyAdminPassword(_passwordController.text)) {
         if (mounted) {
           Navigator.pushReplacement(
@@ -82,7 +83,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> with SingleTickerPr
 
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: AppColors.primaryGradient,
         ),
         child: Center(
@@ -100,7 +101,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> with SingleTickerPr
                 );
               },
               child: Container(
-                constraints: BoxConstraints(maxWidth: isWeb ? 450 : double.infinity),
+                constraints:
+                    BoxConstraints(maxWidth: isWeb ? 450 : double.infinity),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(32),
@@ -164,11 +166,15 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> with SingleTickerPr
                           obscureText: !_isPasswordVisible,
                           decoration: InputDecoration(
                             labelText: 'Mot de passe',
-                            labelStyle: const TextStyle(color: AppColors.textSecondary),
-                            prefixIcon: const Icon(Icons.lock_outlined, color: AppColors.primary),
+                            labelStyle:
+                                const TextStyle(color: AppColors.textSecondary),
+                            prefixIcon: const Icon(Icons.lock_outlined,
+                                color: AppColors.primary),
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                _isPasswordVisible
+                                    ? Icons.visibility_off_outlined
+                                    : Icons.visibility_outlined,
                                 color: AppColors.textSecondary,
                               ),
                               onPressed: () {
@@ -189,9 +195,11 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> with SingleTickerPr
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                              borderSide: const BorderSide(
+                                  color: AppColors.primary, width: 2),
                             ),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 18),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -242,11 +250,14 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> with SingleTickerPr
                           decoration: BoxDecoration(
                             color: AppColors.primary.withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                            border: Border.all(
+                                color:
+                                    AppColors.primary.withValues(alpha: 0.2)),
                           ),
                           child: const Text(
                             'Mot de passe par défaut: admin',
-                            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+                            style: TextStyle(
+                                fontSize: 14, color: AppColors.textSecondary),
                             textAlign: TextAlign.center,
                           ),
                         ),

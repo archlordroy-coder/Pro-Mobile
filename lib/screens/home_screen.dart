@@ -15,7 +15,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -32,7 +33,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
     _animationController.forward();
@@ -137,7 +139,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 5)],
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05), blurRadius: 5)
+            ],
           ),
           child: const Icon(Icons.menu_rounded, color: AppColors.primary),
         ),
@@ -145,15 +150,18 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           children: [
             Icon(Icons.location_on_rounded, color: Colors.red, size: 18),
             SizedBox(width: 4),
-            Text('Bafoussam, Akwa', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            Text('Bafoussam, Akwa',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
           ],
         ),
         CircleAvatar(
           backgroundColor: AppColors.primary,
           child: IconButton(
-            icon: const Icon(Icons.person_outline, color: Colors.white, size: 20),
+            icon:
+                const Icon(Icons.person_outline, color: Colors.white, size: 20),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()));
             },
           ),
         ),
@@ -168,7 +176,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 10, offset: const Offset(0, 4))
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
         ],
       ),
       child: Row(
@@ -227,9 +238,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         gradient: isActive ? gradient : null,
         color: isActive ? null : Colors.white,
         borderRadius: BorderRadius.circular(15),
-        boxShadow: isActive ? [
-          BoxShadow(color: gradient.colors[1].withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))
-        ] : null,
+        boxShadow: isActive
+            ? [
+                BoxShadow(
+                    color: gradient.colors[1].withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4))
+              ]
+            : null,
       ),
       child: Text(
         label,
@@ -248,7 +264,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title, style: AppTextStyles.subHeading),
-          const Text('Voir tout', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12)),
+          const Text('Voir tout',
+              style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12)),
         ],
       ),
     );
@@ -261,26 +281,31 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
     // Filtrage des produits
     var filteredProducts = provider.products;
-    
+
     if (_selectedCategory != 'Tout') {
-      filteredProducts = filteredProducts.where((p) =>
-        p.category.toLowerCase().contains(_selectedCategory.toLowerCase())
-      ).toList();
+      filteredProducts = filteredProducts
+          .where((p) => p.category
+              .toLowerCase()
+              .contains(_selectedCategory.toLowerCase()))
+          .toList();
     }
 
     if (_searchController.text.isNotEmpty) {
       final searchLower = _searchController.text.toLowerCase();
-      filteredProducts = filteredProducts.where((p) =>
-        p.name.toLowerCase().contains(searchLower) ||
-        (p.description?.toLowerCase().contains(searchLower) ?? false)
-      ).toList();
+      filteredProducts = filteredProducts
+          .where((p) =>
+              p.name.toLowerCase().contains(searchLower) ||
+              (p.description?.toLowerCase().contains(searchLower) ?? false))
+          .toList();
     }
 
     if (filteredProducts.isEmpty) {
       return const Center(child: Text('Aucun produit trouvé.'));
     }
 
-    final displayProducts = filteredProducts.length > 4 ? filteredProducts.sublist(0, 4) : filteredProducts;
+    final displayProducts = filteredProducts.length > 4
+        ? filteredProducts.sublist(0, 4)
+        : filteredProducts;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -297,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         final delay = Duration(milliseconds: index * 100);
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0, end: 1),
-          duration: Duration(milliseconds: 400) + delay,
+          duration: const Duration(milliseconds: 400) + delay,
           curve: Curves.easeOut,
           builder: (context, value, child) {
             return Transform.scale(
@@ -309,7 +334,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             );
           },
           child: GestureDetector(
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailScreen(product: product))),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => ProductDetailScreen(product: product))),
             child: _buildProductCard(product),
           ),
         );
@@ -323,7 +351,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10)],
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10)
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,7 +374,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: double.infinity,
-                    errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported, size: 40, color: AppColors.textSecondary),
+                    errorBuilder: (_, __, ___) => const Icon(
+                        Icons.image_not_supported,
+                        size: 40,
+                        color: AppColors.textSecondary),
                   ),
                 ),
               ),
@@ -360,7 +393,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           const SizedBox(height: 4),
           Text(
             product.priceDisplay,
-            style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12),
+            style: const TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 12),
           ),
         ],
       ),
@@ -398,7 +434,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               children: [
                 Text(
                   promo.title,
-                  style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -411,9 +450,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('En savoir plus', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text('En savoir plus',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ],
             ),

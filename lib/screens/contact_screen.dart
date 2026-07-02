@@ -10,20 +10,23 @@ class ContactScreen extends StatefulWidget {
   State<ContactScreen> createState() => _ContactScreenState();
 }
 
-class _ContactScreenState extends State<ContactScreen> with SingleTickerProviderStateMixin {
+class _ContactScreenState extends State<ContactScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
   final BusinessInfo info = const BusinessInfo();
-  
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
 
   Future<void> _launchWhatsApp() async {
     final String cleanPhone = info.whatsapp.replaceAll(RegExp(r'[^0-9]'), '');
-    final String url = "https://wa.me/$cleanPhone?text=${Uri.encodeComponent("Bonjour Ets PRO INFORMATIQUE, je vous contacte depuis l'application mobile...")}";
-    if (!await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication)) {
+    final String url =
+        "https://wa.me/$cleanPhone?text=${Uri.encodeComponent("Bonjour Ets PRO INFORMATIQUE, je vous contacte depuis l'application mobile...")}";
+    if (!await launchUrl(Uri.parse(url),
+        mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch WhatsApp');
     }
   }
@@ -40,7 +43,8 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
     final Uri url = Uri(
       scheme: 'mailto',
       path: info.email,
-      query: Uri.encodeComponent('subject=Contact depuis l\'application&body=Bonjour, ...'),
+      query: Uri.encodeComponent(
+          'subject=Contact depuis l\'application&body=Bonjour, ...'),
     );
     if (!await launchUrl(url)) {
       throw Exception('Could not launch email');
@@ -57,11 +61,13 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
 
     // Ouvre WhatsApp avec le message pré-rempli
     final String cleanPhone = info.whatsapp.replaceAll(RegExp(r'[^0-9]'), '');
-    final String message = 
-      "Bonjour Ets PRO INFORMATIQUE,\nJe suis ${_nameController.text}.\nTéléphone : ${_phoneController.text}\nDescription du travail : ${_descController.text}";
-    final String url = "https://wa.me/$cleanPhone?text=${Uri.encodeComponent(message)}";
-    
-    if (!await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication)) {
+    final String message =
+        "Bonjour Ets PRO INFORMATIQUE,\nJe suis ${_nameController.text}.\nTéléphone : ${_phoneController.text}\nDescription du travail : ${_descController.text}";
+    final String url =
+        "https://wa.me/$cleanPhone?text=${Uri.encodeComponent(message)}";
+
+    if (!await launchUrl(Uri.parse(url),
+        mode: LaunchMode.externalApplication)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Impossible d\'ouvrir WhatsApp')),
       );
@@ -82,7 +88,8 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
     _animationController.forward();
@@ -101,7 +108,8 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contactez-nous', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Contactez-nous',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -120,7 +128,7 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
                   'Notre Siège',
                   info.address,
                   'Bafoussam, Cameroun',
-                  onTap: () {}, 
+                  onTap: () {},
                 ),
                 const SizedBox(height: 20),
                 _buildContactCard(
@@ -162,13 +170,15 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
                   ],
                 ),
                 const SizedBox(height: 40),
-                const Text('Demander un Devis', style: AppTextStyles.subHeading),
+                const Text('Demander un Devis',
+                    style: AppTextStyles.subHeading),
                 const SizedBox(height: 20),
                 _buildTextField('Nom complet', controller: _nameController),
                 const SizedBox(height: 16),
                 _buildTextField('Téléphone', controller: _phoneController),
                 const SizedBox(height: 16),
-                _buildTextField('Description du travail', controller: _descController, maxLines: 4),
+                _buildTextField('Description du travail',
+                    controller: _descController, maxLines: 4),
                 const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
@@ -177,9 +187,12 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
                     onPressed: _submitQuote,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
                     ),
-                    child: const Text('Soumettre la demande', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    child: const Text('Soumettre la demande',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],
@@ -190,7 +203,9 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
     );
   }
 
-  Widget _buildContactCard(IconData icon, String title, String line1, String line2, {VoidCallback? onTap}) {
+  Widget _buildContactCard(
+      IconData icon, String title, String line1, String line2,
+      {VoidCallback? onTap}) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(24),
@@ -223,7 +238,9 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 4),
                   Text(line1, style: AppTextStyles.body),
                   Text(line2, style: AppTextStyles.body),
@@ -236,7 +253,8 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
     );
   }
 
-  Widget _buildActionButton(String label, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionButton(
+      String label, IconData icon, Color color, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -251,14 +269,16 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
           children: [
             Icon(icon, color: color, size: 28),
             const SizedBox(height: 8),
-            Text(label, style: TextStyle(color: color, fontWeight: FontWeight.bold)),
+            Text(label,
+                style: TextStyle(color: color, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTextField(String label, {TextEditingController? controller, int maxLines = 1}) {
+  Widget _buildTextField(String label,
+      {TextEditingController? controller, int maxLines = 1}) {
     return TextField(
       controller: controller,
       maxLines: maxLines,
@@ -270,7 +290,8 @@ class _ContactScreenState extends State<ContactScreen> with SingleTickerProvider
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       ),
     );
   }

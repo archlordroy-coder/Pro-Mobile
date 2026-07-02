@@ -6,7 +6,6 @@ import '../constants.dart';
 import '../models/service.dart';
 import '../models/product.dart';
 import '../models/cyber_session.dart';
-import '../models/promotion.dart';
 import '../models/review.dart';
 import 'admin_login_screen.dart';
 
@@ -17,7 +16,8 @@ class AdminPanelScreen extends StatefulWidget {
   State<AdminPanelScreen> createState() => _AdminPanelScreenState();
 }
 
-class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerProviderStateMixin {
+class _AdminPanelScreenState extends State<AdminPanelScreen>
+    with SingleTickerProviderStateMixin {
   int _currentView = 0; // 0: Services, 1: Products, 2: Cyber Café, 3: Reviews
   bool _isPopulating = false;
 
@@ -57,24 +57,28 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
 
     try {
       WriteBatch batch = firestore.batch();
-      
+
       for (var service in proServices) {
-        DocumentReference ref = firestore.collection('services').doc(service.id);
+        DocumentReference ref =
+            firestore.collection('services').doc(service.id);
         batch.set(ref, service.toMap());
       }
 
       for (var product in proProducts) {
-        DocumentReference ref = firestore.collection('products').doc(product.id);
+        DocumentReference ref =
+            firestore.collection('products').doc(product.id);
         batch.set(ref, product.toMap());
       }
 
       for (var ticket in proCyberTickets) {
-        DocumentReference ref = firestore.collection('cyber_tickets').doc(ticket.id);
+        DocumentReference ref =
+            firestore.collection('cyber_tickets').doc(ticket.id);
         batch.set(ref, ticket.toMap());
       }
 
       for (var computer in proComputers) {
-        DocumentReference ref = firestore.collection('computers').doc(computer.id);
+        DocumentReference ref =
+            firestore.collection('computers').doc(computer.id);
         batch.set(ref, computer.toMap());
       }
 
@@ -84,7 +88,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
       }
 
       await batch.commit();
-      
+
       if (mounted) {
         context.read<AppProvider>().fetchData();
         ScaffoldMessenger.of(context).showSnackBar(
@@ -156,7 +160,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                                   color: Colors.white.withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(16),
                                 ),
-                                child: const Icon(Icons.admin_panel_settings, color: Colors.white, size: 28),
+                                child: const Icon(Icons.admin_panel_settings,
+                                    color: Colors.white, size: 28),
                               ),
                               const SizedBox(width: 12),
                               const Expanded(
@@ -177,7 +182,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                               color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            child: const Icon(Icons.admin_panel_settings, color: Colors.white, size: 28),
+                            child: const Icon(Icons.admin_panel_settings,
+                                color: Colors.white, size: 28),
                           ),
                   ),
                   const SizedBox(height: 16),
@@ -186,8 +192,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                     child: ListView(
                       padding: EdgeInsets.symmetric(horizontal: isWeb ? 16 : 8),
                       children: [
-                        _buildNavItem(0, Icons.miscellaneous_services_rounded, 'Services', isWeb),
-                        _buildNavItem(1, Icons.shopping_bag_rounded, 'Produits', isWeb),
+                        _buildNavItem(0, Icons.miscellaneous_services_rounded,
+                            'Services', isWeb),
+                        _buildNavItem(
+                            1, Icons.shopping_bag_rounded, 'Produits', isWeb),
                         _buildNavItem(2, Icons.computer, 'Cyber Café', isWeb),
                         _buildNavItem(3, Icons.reviews_rounded, 'Avis', isWeb),
                       ],
@@ -198,8 +206,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                     padding: EdgeInsets.symmetric(horizontal: isWeb ? 16 : 8),
                     child: isWeb
                         ? ListTile(
-                            leading: const Icon(Icons.lock_reset, color: Colors.white),
-                            title: const Text('Changer mot de passe', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                            leading: const Icon(Icons.lock_reset,
+                                color: Colors.white),
+                            title: const Text('Changer mot de passe',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600)),
                             onTap: () => _showChangePasswordDialog(),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
@@ -207,7 +219,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                             hoverColor: Colors.white.withValues(alpha: 0.1),
                           )
                         : IconButton(
-                            icon: const Icon(Icons.lock_reset, color: Colors.white),
+                            icon: const Icon(Icons.lock_reset,
+                                color: Colors.white),
                             onPressed: () => _showChangePasswordDialog(),
                             tooltip: 'Changer mot de passe',
                           ),
@@ -217,8 +230,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                     padding: EdgeInsets.all(isWeb ? 16 : 8),
                     child: isWeb
                         ? ListTile(
-                            leading: const Icon(Icons.logout, color: Colors.white),
-                            title: const Text('Déconnexion', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                            leading:
+                                const Icon(Icons.logout, color: Colors.white),
+                            title: const Text('Déconnexion',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600)),
                             onTap: () => _logout(context),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
@@ -250,7 +267,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                       ),
                     ],
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   child: Row(
                     children: [
                       Expanded(
@@ -264,7 +282,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.refresh, color: AppColors.textSecondary),
+                        icon: const Icon(Icons.refresh,
+                            color: AppColors.textSecondary),
                         onPressed: () => appProvider.fetchData(),
                         tooltip: 'Actualiser',
                       ),
@@ -274,14 +293,19 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.cardTeal,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 14),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           elevation: 0,
                         ),
                         icon: _isPopulating
-                            ? const SizedBox(height: 18, width: 18, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                            ? const SizedBox(
+                                height: 18,
+                                width: 18,
+                                child: CircularProgressIndicator(
+                                    color: Colors.white, strokeWidth: 2))
                             : const Icon(Icons.upload_file, size: 20),
                         label: const Text(
                           'Peupler Firestore',
@@ -344,12 +368,16 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
           ? ListTile(
               leading: Icon(
                 icon,
-                color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
+                color: isSelected
+                    ? Colors.white
+                    : Colors.white.withValues(alpha: 0.6),
               ),
               title: Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.8),
+                  color: isSelected
+                      ? Colors.white
+                      : Colors.white.withValues(alpha: 0.8),
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
@@ -366,13 +394,17 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             )
           : Container(
               decoration: BoxDecoration(
-                color: isSelected ? Colors.white.withValues(alpha: 0.2) : Colors.transparent,
+                color: isSelected
+                    ? Colors.white.withValues(alpha: 0.2)
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: IconButton(
                 icon: Icon(
                   icon,
-                  color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
+                  color: isSelected
+                      ? Colors.white
+                      : Colors.white.withValues(alpha: 0.6),
                   size: 24,
                 ),
                 onPressed: () {
@@ -387,30 +419,44 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
 
   String _getViewTitle() {
     switch (_currentView) {
-      case 0: return 'Gestion des Services';
-      case 1: return 'Gestion des Produits';
-      case 2: return 'Gestion du Cyber Café';
-      case 3: return 'Gestion des Avis Clients';
-      default: return '';
+      case 0:
+        return 'Gestion des Services';
+      case 1:
+        return 'Gestion des Produits';
+      case 2:
+        return 'Gestion du Cyber Café';
+      case 3:
+        return 'Gestion des Avis Clients';
+      default:
+        return '';
     }
   }
 
   String _getAddButtonLabel() {
     switch (_currentView) {
-      case 0: return 'Ajouter Service';
-      case 1: return 'Ajouter Produit';
-      case 2: return 'Ajouter Ticket';
-      default: return '';
+      case 0:
+        return 'Ajouter Service';
+      case 1:
+        return 'Ajouter Produit';
+      case 2:
+        return 'Ajouter Ticket';
+      default:
+        return '';
     }
   }
 
   Widget _buildCurrentView(AppProvider provider, double width) {
     switch (_currentView) {
-      case 0: return _buildServicesTable(provider, width);
-      case 1: return _buildProductsTable(provider, width);
-      case 2: return _buildCyberCafeSection(provider, width);
-      case 3: return _buildReviewsSection(provider, width);
-      default: return const SizedBox();
+      case 0:
+        return _buildServicesTable(provider, width);
+      case 1:
+        return _buildProductsTable(provider, width);
+      case 2:
+        return _buildCyberCafeSection(provider, width);
+      case 3:
+        return _buildReviewsSection(provider, width);
+      default:
+        return const SizedBox();
     }
   }
 
@@ -458,7 +504,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         leading: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -479,7 +526,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
           padding: const EdgeInsets.only(top: 4),
           child: Text(
             service.description,
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+            style:
+                const TextStyle(color: AppColors.textSecondary, fontSize: 14),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -493,7 +541,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
               tooltip: 'Modifier',
             ),
             IconButton(
-              icon: const Icon(Icons.delete, color: AppColors.cardPink, size: 20),
+              icon:
+                  const Icon(Icons.delete, color: AppColors.cardPink, size: 20),
               onPressed: () => _deleteService(service.id),
               tooltip: 'Supprimer',
             ),
@@ -541,7 +590,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
           Expanded(
             flex: 3,
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(20)),
               child: product.imageUrl.isNotEmpty
                   ? Image.network(
                       product.imageUrl,
@@ -551,7 +601,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                         return Container(
                           color: AppColors.primary.withValues(alpha: 0.1),
                           child: const Center(
-                            child: Icon(Icons.image_not_supported, color: AppColors.primary, size: 40),
+                            child: Icon(Icons.image_not_supported,
+                                color: AppColors.primary, size: 40),
                           ),
                         );
                       },
@@ -559,7 +610,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                   : Container(
                       color: AppColors.primary.withValues(alpha: 0.1),
                       child: const Center(
-                        child: Icon(Icons.shopping_bag, color: AppColors.primary, size: 40),
+                        child: Icon(Icons.shopping_bag,
+                            color: AppColors.primary, size: 40),
                       ),
                     ),
             ),
@@ -578,14 +630,18 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                     children: [
                       Text(
                         product.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 14),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
                       Text(
                         product.category,
-                        style: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.7), fontSize: 12),
+                        style: TextStyle(
+                            color:
+                                AppColors.textSecondary.withValues(alpha: 0.7),
+                            fontSize: 12),
                       ),
                     ],
                   ),
@@ -594,17 +650,22 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                     children: [
                       Text(
                         product.priceDisplay,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.primary),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: AppColors.primary),
                       ),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue, size: 18),
+                            icon: const Icon(Icons.edit,
+                                color: Colors.blue, size: 18),
                             onPressed: () => _editProduct(product),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete, color: AppColors.cardPink, size: 18),
+                            icon: const Icon(Icons.delete,
+                                color: AppColors.cardPink, size: 18),
                             onPressed: () => _deleteProduct(product.id),
                           ),
                         ],
@@ -645,11 +706,14 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   children: [
-                    const Icon(Icons.receipt_long, color: AppColors.primary, size: 24),
-                    const SizedBox(width: 12),
-                    const Text('Tarifs des Tickets', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    Icon(Icons.receipt_long,
+                        color: AppColors.primary, size: 24),
+                    SizedBox(width: 12),
+                    Text('Tarifs des Tickets',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -663,7 +727,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                     childAspectRatio: 1.2,
                   ),
                   itemCount: provider.cyberTickets.length,
-                  itemBuilder: (context, index) => _buildTicketCardAdmin(provider.cyberTickets[index]),
+                  itemBuilder: (context, index) =>
+                      _buildTicketCardAdmin(provider.cyberTickets[index]),
                 ),
               ],
             ),
@@ -686,11 +751,13 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   children: [
-                    const Icon(Icons.computer, color: AppColors.primary, size: 24),
-                    const SizedBox(width: 12),
-                    const Text('État des Ordinateurs', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    Icon(Icons.computer, color: AppColors.primary, size: 24),
+                    SizedBox(width: 12),
+                    Text('État des Ordinateurs',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -704,7 +771,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                     childAspectRatio: 1.1,
                   ),
                   itemCount: provider.computers.length,
-                  itemBuilder: (context, index) => _buildComputerCardAdmin(provider.computers[index]),
+                  itemBuilder: (context, index) =>
+                      _buildComputerCardAdmin(provider.computers[index]),
                 ),
               ],
             ),
@@ -736,12 +804,18 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             const SizedBox(height: 8),
             Text(
               ticket.duration,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Colors.white),
             ),
             const SizedBox(height: 8),
             Text(
               ticket.priceDisplay,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             const SizedBox(height: 12),
             Row(
@@ -764,7 +838,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.delete, size: 18, color: Colors.white),
+                    icon:
+                        const Icon(Icons.delete, size: 18, color: Colors.white),
                     onPressed: () => _deleteTicket(ticket.id),
                   ),
                 ),
@@ -787,7 +862,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
         ),
         boxShadow: [
           BoxShadow(
-            color: (computer.isAvailable ? AppColors.cardTeal : AppColors.cardPink).withValues(alpha: 0.2),
+            color:
+                (computer.isAvailable ? AppColors.cardTeal : AppColors.cardPink)
+                    .withValues(alpha: 0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -801,13 +878,18 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: (computer.isAvailable ? AppColors.cardTeal : AppColors.cardPink).withValues(alpha: 0.1),
+                color: (computer.isAvailable
+                        ? AppColors.cardTeal
+                        : AppColors.cardPink)
+                    .withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.computer,
                 size: 32,
-                color: computer.isAvailable ? AppColors.cardTeal : AppColors.cardPink,
+                color: computer.isAvailable
+                    ? AppColors.cardTeal
+                    : AppColors.cardPink,
               ),
             ),
             const SizedBox(height: 12),
@@ -819,7 +901,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: (computer.isAvailable ? AppColors.cardTeal : AppColors.cardPink).withValues(alpha: 0.1),
+                color: (computer.isAvailable
+                        ? AppColors.cardTeal
+                        : AppColors.cardPink)
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -827,7 +912,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: computer.isAvailable ? AppColors.cardTeal : AppColors.cardPink,
+                  color: computer.isAvailable
+                      ? AppColors.cardTeal
+                      : AppColors.cardPink,
                 ),
               ),
             ),
@@ -835,7 +922,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
               const SizedBox(height: 8),
               Text(
                 computer.currentUser!,
-                style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
+                style: const TextStyle(
+                    fontSize: 10, color: AppColors.textSecondary),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -880,14 +968,17 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
           Container(
             width: 50,
             height: 50,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: AppColors.accentGradient,
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
                 review.userName.characters.first.toUpperCase(),
-                style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -901,27 +992,35 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                   children: [
                     Text(
                       review.userName,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: List.generate(5, (index) => Icon(
-                        index < review.rating ? Icons.star : Icons.star_border,
-                        color: Colors.amber,
-                        size: 18,
-                      )),
+                      children: List.generate(
+                          5,
+                          (index) => Icon(
+                                index < review.rating
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                color: Colors.amber,
+                                size: 18,
+                              )),
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Text(
                   review.productId,
-                  style: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.7), fontSize: 12),
+                  style: TextStyle(
+                      color: AppColors.textSecondary.withValues(alpha: 0.7),
+                      fontSize: 12),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   review.comment,
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                  style: const TextStyle(
+                      color: AppColors.textSecondary, fontSize: 14),
                 ),
               ],
             ),
@@ -977,8 +1076,11 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                isEdit ? 'Modifier ${_getItemName()}' : 'Nouveau ${_getItemName()}',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                isEdit
+                    ? 'Modifier ${_getItemName()}'
+                    : 'Nouveau ${_getItemName()}',
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 32),
               Expanded(
@@ -1059,9 +1161,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                       onPressed: () => Navigator.pop(context),
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
                       ),
-                      child: const Text('Annuler', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      child: const Text('Annuler',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600)),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -1074,41 +1179,55 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                               // TODO: Implement update service
                             } else {
                               final newService = Service(
-                                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                id: DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
                                 title: titleController.text,
                                 description: descController.text,
                                 iconCode: Icons.business.codePoint,
                                 features: [],
                               );
-                              await context.read<AppProvider>().addService(newService);
+                              await context
+                                  .read<AppProvider>()
+                                  .addService(newService);
                             }
                           } else if (_currentView == 1) {
                             if (isEdit && item is Product) {
                               // TODO: Implement update product
                             } else {
                               final newProduct = Product(
-                                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                id: DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
                                 name: titleController.text,
                                 category: categoryController.text,
-                                priceValue: double.tryParse(priceController.text) ?? 0,
+                                priceValue:
+                                    double.tryParse(priceController.text) ?? 0,
                                 priceDisplay: '${priceController.text} FCFA',
                                 description: descController.text,
                                 imageUrl: imageController.text,
                                 rating: 0.0,
                               );
-                              await context.read<AppProvider>().addProduct(newProduct);
+                              await context
+                                  .read<AppProvider>()
+                                  .addProduct(newProduct);
                             }
                           } else if (_currentView == 2) {
                             if (isEdit && item is CyberTicket) {
                               // TODO: Implement update ticket
                             } else {
                               final newTicket = CyberTicket(
-                                id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                id: DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
                                 duration: durationController.text,
-                                price: double.tryParse(priceController.text) ?? 0,
+                                price:
+                                    double.tryParse(priceController.text) ?? 0,
                                 priceDisplay: '${priceController.text} FCFA',
                               );
-                              await context.read<AppProvider>().addCyberTicket(newTicket);
+                              await context
+                                  .read<AppProvider>()
+                                  .addCyberTicket(newTicket);
                             }
                           }
                           if (mounted) Navigator.pop(context);
@@ -1131,7 +1250,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                       ),
                       child: Text(
                         isEdit ? 'Mettre à jour' : 'Enregistrer',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -1146,10 +1266,14 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
 
   String _getItemName() {
     switch (_currentView) {
-      case 0: return 'Service';
-      case 1: return 'Produit';
-      case 2: return 'Ticket';
-      default: return '';
+      case 0:
+        return 'Service';
+      case 1:
+        return 'Produit';
+      case 2:
+        return 'Ticket';
+      default:
+        return '';
     }
   }
 
@@ -1182,7 +1306,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.primary, width: 2),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       ),
     );
   }
@@ -1215,7 +1340,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
     return await showDialog<bool>(
           context: context,
           builder: (context) => Dialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Container(
               width: 400,
               padding: const EdgeInsets.all(32),
@@ -1228,7 +1354,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                       color: AppColors.cardPink.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.delete_outline, color: AppColors.cardPink, size: 40),
+                    child: const Icon(Icons.delete_outline,
+                        color: AppColors.cardPink, size: 40),
                   ),
                   const SizedBox(height: 24),
                   const Text(
@@ -1238,7 +1365,8 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                   const SizedBox(height: 12),
                   Text(
                     'Êtes-vous sûr de vouloir supprimer $itemName ?',
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
+                    style: const TextStyle(
+                        color: AppColors.textSecondary, fontSize: 16),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 32),
@@ -1249,9 +1377,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                           onPressed: () => Navigator.pop(context, false),
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
                           ),
-                          child: const Text('Annuler', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                          child: const Text('Annuler',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600)),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -1266,7 +1397,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text('Supprimer', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          child: const Text('Supprimer',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
                         ),
                       ),
                     ],
@@ -1303,35 +1436,37 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
   }
 
   void _showChangePasswordDialog() {
-    final _formKey = GlobalKey<FormState>();
-    final _currentPasswordController = TextEditingController();
-    final _newPasswordController = TextEditingController();
-    final _confirmPasswordController = TextEditingController();
-    bool _isCurrentPasswordVisible = false;
-    bool _isNewPasswordVisible = false;
-    bool _isConfirmPasswordVisible = false;
-    bool _isChangingPassword = false;
+    final formKey = GlobalKey<FormState>();
+    final currentPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+    bool isCurrentPasswordVisible = false;
+    bool isNewPasswordVisible = false;
+    bool isConfirmPasswordVisible = false;
+    bool isChangingPassword = false;
 
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) {
           return Dialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
             elevation: 0,
             child: Container(
               width: 450,
               constraints: const BoxConstraints(maxHeight: 550),
               padding: const EdgeInsets.all(32),
               child: Form(
-                key: _formKey,
+                key: formKey,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Changer le mot de passe',
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 32),
                     Expanded(
@@ -1341,20 +1476,25 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                           children: [
                             // Current Password
                             TextFormField(
-                              controller: _currentPasswordController,
-                              obscureText: !_isCurrentPasswordVisible,
+                              controller: currentPasswordController,
+                              obscureText: !isCurrentPasswordVisible,
                               decoration: InputDecoration(
                                 labelText: 'Mot de passe actuel',
-                                labelStyle: const TextStyle(color: AppColors.textSecondary),
-                                prefixIcon: const Icon(Icons.lock_outlined, color: AppColors.primary),
+                                labelStyle: const TextStyle(
+                                    color: AppColors.textSecondary),
+                                prefixIcon: const Icon(Icons.lock_outlined,
+                                    color: AppColors.primary),
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _isCurrentPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                    isCurrentPasswordVisible
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
                                     color: AppColors.textSecondary,
                                   ),
                                   onPressed: () {
                                     setDialogState(() {
-                                      _isCurrentPasswordVisible = !_isCurrentPasswordVisible;
+                                      isCurrentPasswordVisible =
+                                          !isCurrentPasswordVisible;
                                     });
                                   },
                                 ),
@@ -1370,15 +1510,19 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                                  borderSide: const BorderSide(
+                                      color: AppColors.primary, width: 2),
                                 ),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 18),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Veuillez entrer le mot de passe actuel';
                                 }
-                                if (!context.read<AppProvider>().verifyAdminPassword(value)) {
+                                if (!context
+                                    .read<AppProvider>()
+                                    .verifyAdminPassword(value)) {
                                   return 'Mot de passe actuel incorrect';
                                 }
                                 return null;
@@ -1387,20 +1531,25 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                             const SizedBox(height: 16),
                             // New Password
                             TextFormField(
-                              controller: _newPasswordController,
-                              obscureText: !_isNewPasswordVisible,
+                              controller: newPasswordController,
+                              obscureText: !isNewPasswordVisible,
                               decoration: InputDecoration(
                                 labelText: 'Nouveau mot de passe',
-                                labelStyle: const TextStyle(color: AppColors.textSecondary),
-                                prefixIcon: const Icon(Icons.lock_reset, color: AppColors.primary),
+                                labelStyle: const TextStyle(
+                                    color: AppColors.textSecondary),
+                                prefixIcon: const Icon(Icons.lock_reset,
+                                    color: AppColors.primary),
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _isNewPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                    isNewPasswordVisible
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
                                     color: AppColors.textSecondary,
                                   ),
                                   onPressed: () {
                                     setDialogState(() {
-                                      _isNewPasswordVisible = !_isNewPasswordVisible;
+                                      isNewPasswordVisible =
+                                          !isNewPasswordVisible;
                                     });
                                   },
                                 ),
@@ -1416,9 +1565,11 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                                  borderSide: const BorderSide(
+                                      color: AppColors.primary, width: 2),
                                 ),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 18),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -1433,20 +1584,25 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                             const SizedBox(height: 16),
                             // Confirm Password
                             TextFormField(
-                              controller: _confirmPasswordController,
-                              obscureText: !_isConfirmPasswordVisible,
+                              controller: confirmPasswordController,
+                              obscureText: !isConfirmPasswordVisible,
                               decoration: InputDecoration(
                                 labelText: 'Confirmer le nouveau mot de passe',
-                                labelStyle: const TextStyle(color: AppColors.textSecondary),
-                                prefixIcon: const Icon(Icons.lock_outlined, color: AppColors.primary),
+                                labelStyle: const TextStyle(
+                                    color: AppColors.textSecondary),
+                                prefixIcon: const Icon(Icons.lock_outlined,
+                                    color: AppColors.primary),
                                 suffixIcon: IconButton(
                                   icon: Icon(
-                                    _isConfirmPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                    isConfirmPasswordVisible
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
                                     color: AppColors.textSecondary,
                                   ),
                                   onPressed: () {
                                     setDialogState(() {
-                                      _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                                      isConfirmPasswordVisible =
+                                          !isConfirmPasswordVisible;
                                     });
                                   },
                                 ),
@@ -1462,15 +1618,17 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                                  borderSide: const BorderSide(
+                                      color: AppColors.primary, width: 2),
                                 ),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 18),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Veuillez confirmer le mot de passe';
                                 }
-                                if (value != _newPasswordController.text) {
+                                if (value != newPasswordController.text) {
                                   return 'Les mots de passe ne correspondent pas';
                                 }
                                 return null;
@@ -1492,47 +1650,64 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text('Annuler', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                            child: const Text('Annuler',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w600)),
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: _isChangingPassword
+                            onPressed: isChangingPassword
                                 ? null
                                 : () async {
-                                    if (_formKey.currentState!.validate()) {
-                                      setDialogState(() => _isChangingPassword = true);
+                                    if (formKey.currentState!.validate()) {
+                                      setDialogState(
+                                          () => isChangingPassword = true);
                                       try {
-                                        await context.read<AppProvider>().changeAdminPassword(_newPasswordController.text);
+                                        await context
+                                            .read<AppProvider>()
+                                            .changeAdminPassword(
+                                                newPasswordController.text);
                                         if (mounted) {
                                           Navigator.pop(context);
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
                                             const SnackBar(
-                                              content: Text('Mot de passe changé avec succès!'),
-                                              backgroundColor: AppColors.primary,
-                                              behavior: SnackBarBehavior.floating,
+                                              content: Text(
+                                                  'Mot de passe changé avec succès!'),
+                                              backgroundColor:
+                                                  AppColors.primary,
+                                              behavior:
+                                                  SnackBarBehavior.floating,
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(12),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
                                             ),
                                           );
                                         }
                                       } catch (e) {
                                         if (mounted) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
                                             SnackBar(
-                                              content: Text('Erreur lors du changement de mot de passe: $e'),
-                                              backgroundColor: AppColors.cardPink,
-                                              behavior: SnackBarBehavior.floating,
+                                              content: Text(
+                                                  'Erreur lors du changement de mot de passe: $e'),
+                                              backgroundColor:
+                                                  AppColors.cardPink,
+                                              behavior:
+                                                  SnackBarBehavior.floating,
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(12),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
                                             ),
                                           );
                                         }
                                       } finally {
-                                        setDialogState(() => _isChangingPassword = false);
+                                        setDialogState(
+                                            () => isChangingPassword = false);
                                       }
                                     }
                                   },
@@ -1544,7 +1719,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: _isChangingPassword
+                            child: isChangingPassword
                                 ? const SizedBox(
                                     height: 20,
                                     width: 20,
@@ -1555,7 +1730,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> with SingleTickerPr
                                   )
                                 : const Text(
                                     'Changer',
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
                                   ),
                           ),
                         ),

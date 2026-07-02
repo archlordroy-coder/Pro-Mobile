@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class CyberTicket {
   final String id;
   final String duration; // e.g., "1h", "2h", "5h", "Journée"
@@ -77,7 +75,9 @@ class Computer {
       name: map['name'] ?? '',
       isAvailable: map['isAvailable'] ?? true,
       currentUser: map['currentUser'],
-      endTime: map['endTime'] != null ? DateTime.fromMillisecondsSinceEpoch(map['endTime']) : null,
+      endTime: map['endTime'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['endTime'])
+          : null,
     );
   }
 
@@ -130,8 +130,10 @@ final List<CyberTicket> proCyberTickets = [
 final List<Computer> proComputers = [
   const Computer(id: 'pc1', name: 'PC 1', isAvailable: true),
   const Computer(id: 'pc2', name: 'PC 2', isAvailable: true),
-  const Computer(id: 'pc3', name: 'PC 3', isAvailable: false, currentUser: 'Client A'),
+  const Computer(
+      id: 'pc3', name: 'PC 3', isAvailable: false, currentUser: 'Client A'),
   const Computer(id: 'pc4', name: 'PC 4', isAvailable: true),
-  const Computer(id: 'pc5', name: 'PC 5', isAvailable: false, currentUser: 'Client B'),
+  const Computer(
+      id: 'pc5', name: 'PC 5', isAvailable: false, currentUser: 'Client B'),
   const Computer(id: 'pc6', name: 'PC 6', isAvailable: true),
 ];

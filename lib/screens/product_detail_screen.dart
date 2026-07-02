@@ -29,10 +29,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   Future<void> _contactForPurchase() async {
     const info = BusinessInfo();
-    final String message = "Bonjour Ets PRO INFORMATIQUE, je suis intéressé par l'article suivant : ${widget.product.name} (Prix: ${widget.product.priceDisplay}). Pouvons-nous discuter des modalités de vente ?";
-    final String url = "https://wa.me/${info.whatsapp.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '')}?text=${Uri.encodeComponent(message)}";
-    
-    if (!await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication)) {
+    final String message =
+        "Bonjour Ets PRO INFORMATIQUE, je suis intéressé par l'article suivant : ${widget.product.name} (Prix: ${widget.product.priceDisplay}). Pouvons-nous discuter des modalités de vente ?";
+    final String url =
+        "https://wa.me/${info.whatsapp.replaceAll(' ', '').replaceAll('+', '').replaceAll('(', '').replaceAll(')', '')}?text=${Uri.encodeComponent(message)}";
+
+    if (!await launchUrl(Uri.parse(url),
+        mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch WhatsApp');
     }
   }
@@ -51,7 +54,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     double rating = 5;
     String comment = '';
     if (!mounted) return;
-    
+
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -79,7 +82,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Annuler')),
             ElevatedButton(
               onPressed: () async {
                 if (comment.isNotEmpty) {
@@ -93,8 +98,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     timestamp: DateTime.now(),
                   );
 
-                  await _firestore.collection('reviews').doc(newReview.id).set(newReview.toMap());
-                  
+                  await _firestore
+                      .collection('reviews')
+                      .doc(newReview.id)
+                      .set(newReview.toMap());
+
                   if (mounted) {
                     context.read<AppProvider>().fetchData();
                     Navigator.pop(context);
@@ -131,7 +139,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 child: Image.network(
                   widget.product.imageUrl,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.image_not_supported, size: 100)),
+                  errorBuilder: (_, __, ___) => const Center(
+                      child: Icon(Icons.image_not_supported, size: 100)),
                 ),
               ),
             ),
@@ -146,14 +155,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
                           color: AppColors.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           widget.product.category,
-                          style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       Row(
@@ -161,13 +173,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           const Icon(Icons.star, color: Colors.amber, size: 22),
                           const SizedBox(width: 6),
                           Text(
-                            avgRating > 0 ? avgRating.toStringAsFixed(1) : '0.0',
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                            avgRating > 0
+                                ? avgRating.toStringAsFixed(1)
+                                : '0.0',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             '(${productReviews.length})',
-                            style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                            style: const TextStyle(
+                                color: AppColors.textSecondary, fontSize: 14),
                           ),
                         ],
                       ),
@@ -188,14 +204,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   const Text('Description', style: AppTextStyles.subHeading),
                   const SizedBox(height: 8),
                   Text(
-                    widget.product.description ?? "Ce produit est disponible chez Ets PRO INFORMATIQUE. Contactez-nous pour plus de détails sur la disponibilité et les spécifications techniques.",
+                    widget.product.description ??
+                        "Ce produit est disponible chez Ets PRO INFORMATIQUE. Contactez-nous pour plus de détails sur la disponibilité et les spécifications techniques.",
                     style: AppTextStyles.body,
                   ),
                   const SizedBox(height: 32),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Avis des clients', style: AppTextStyles.subHeading),
+                      const Text('Avis des clients',
+                          style: AppTextStyles.subHeading),
                       TextButton.icon(
                         icon: const Icon(Icons.add),
                         label: const Text('Ajouter un avis'),
@@ -216,7 +234,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     )
                   else
-                    ...productReviews.map((review) => _buildReviewCard(review)).toList(),
+                    ...productReviews.map((review) => _buildReviewCard(review)),
                   const SizedBox(height: 32),
                   _buildPaymentNotice(),
                   const SizedBox(height: 100),
@@ -231,7 +249,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
-            BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -5))
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, -5))
           ],
         ),
         child: SizedBox(
@@ -239,14 +260,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           height: 56,
           child: ElevatedButton.icon(
             onPressed: _contactForPurchase,
-            icon: const Icon(Icons.chat_bubble_outline_rounded, color: Colors.white),
+            icon: const Icon(Icons.chat_bubble_outline_rounded,
+                color: Colors.white),
             label: const Text(
               'COMMANDER VIA WHATSAPP',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF25D366),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
             ),
           ),
         ),
@@ -261,7 +285,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4))
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,16 +302,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 children: [
                   CircleAvatar(
                     backgroundColor: AppColors.primary,
-                    child: Text(review.userName[0].toUpperCase(), style: const TextStyle(color: Colors.white)),
+                    child: Text(review.userName[0].toUpperCase(),
+                        style: const TextStyle(color: Colors.white)),
                   ),
                   const SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(review.userName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      Text(review.userName,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16)),
                       Text(
                         '${review.timestamp.day}/${review.timestamp.month}/${review.timestamp.year}',
-                        style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+                        style: const TextStyle(
+                            color: AppColors.textSecondary, fontSize: 12),
                       ),
                     ],
                   ),
@@ -325,7 +358,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Expanded(
             child: Text(
               'Note : Le paiement se fait physiquement au magasin après accord sur les modalités.',
-              style: TextStyle(fontSize: 14, color: AppColors.textPrimary, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w500),
             ),
           ),
         ],
