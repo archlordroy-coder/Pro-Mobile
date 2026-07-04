@@ -31,7 +31,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
     final filteredProducts = appProvider.products.where((product) {
       return product.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-             product.description.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+             (product.description?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false) ||
              product.category.toLowerCase().contains(_searchQuery.toLowerCase());
     }).toList();
 

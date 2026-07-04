@@ -91,7 +91,7 @@ class ServiceDetailScreen extends StatelessWidget {
                     height: 56,
                     child: ElevatedButton.icon(
                       onPressed: () => _contactForService(context),
-                      icon: const Icon(Icons.whatsapp, size: 24),
+                      icon: const Icon(Icons.message, size: 24),
                       label: const Text(
                         'Contacter pour ce service',
                         style: TextStyle(

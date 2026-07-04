@@ -20,7 +20,7 @@ class _CartScreenState extends State<CartScreen> {
   final List<CartItem> _cartItems = [];
 
   double get _totalPrice {
-    return _cartItems.fold(0, (sum, item) => sum + (item.product.price * item.quantity));
+    return _cartItems.fold(0, (sum, item) => sum + (item.product.priceValue * item.quantity));
   }
 
   @override
