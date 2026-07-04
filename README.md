@@ -221,11 +221,169 @@ await appProvider.fetchData();
 2. Générer la clé de signature
 3. Builder l'APK ou AAB
 
+```bash
+flutter build apk
+flutter build appbundle
+```
+
 ### iOS
 
 1. Configurer `ios/Runner.xcodeproj`
 2. Configurer les certificats et profils
 3. Builder l'IPA
+
+```bash
+flutter build ios
+```
+
+### Web
+
+```bash
+flutter build web
+```
+
+## Utilisation de l'API
+
+### Configuration
+
+L'application mobile utilise l'API backend via le fichier `lib/services/api_service.dart` :
+
+```dart
+const String baseUrl = 'https://api.proinformatique.dev';
+```
+
+### Architecture des Appels API
+
+L'application suit une architecture en couches pour les appels API :
+
+1. **API Service** (`lib/services/api_service.dart`) :
+   - Contient les fonctions HTTP directes
+   - Gère les requêtes et réponses brutes
+   - Exemple :
+   ```dart
+   Future<List<Service>> getServices() async {
+     final response = await http.get(Uri.parse('$baseUrl/services'));
+     if (response.statusCode == 200) {
+       return json.decode(response.body);
+     }
+     throw Exception('Failed to load services');
+   }
+   ```
+
+2. **Data Repository** (`lib/services/data_repository.dart`) :
+   - Couche d'abstraction pour les données
+   - Gère le cache local
+   - Intègre avec AppProvider
+   - Exemple :
+   ```dart
+   Future<List<Service>> fetchServices() async {
+     try {
+       final services = await _apiService.getServices();
+       await _cacheService.cacheServices(services);
+       return services;
+     } catch (e) {
+       return _cacheService.getCachedServices();
+     }
+   }
+   ```
+
+3. **App Provider** (`lib/providers/app_provider.dart`) :
+   - Gestion d'état globale
+   - Expose les données aux UI
+   - Gère les erreurs
+   - Exemple :
+   ```dart
+   Future<void> fetchData() async {
+     _services = await _dataRepository.fetchServices();
+     _products = await _dataRepository.fetchProducts();
+     _promotions = await _dataRepository.fetchPromotions();
+     notifyListeners();
+   }
+   ```
+
+### Endpoints Utilisés
+
+L'application mobile utilise les endpoints suivants de l'API :
+
+- **GET /services** : Récupérer la liste des services
+- **GET /products** : Récupérer la liste des produits
+- **GET /promotions** : Récupérer les promotions en cours
+- **POST /auth/register** : Créer un compte utilisateur
+- **POST /auth/login** : Connexion utilisateur
+- **POST /reviews** : Ajouter un avis sur un produit
+- **GET /cyber-tickets** : Récupérer les tickets cyber café
+- **POST /cyber-tickets** : Créer un ticket cyber café
+- **GET /computers** : Récupérer les ordinateurs disponibles
+
+### Intégration avec le Backend
+
+Pour intégrer l'application mobile avec le backend :
+
+1. **Configurer l'URL de l'API** dans `lib/services/api_service.dart` :
+   ```dart
+   const String baseUrl = 'https://api.proinformatique.dev';
+   ```
+
+2. **Installer les dépendances** :
+   ```bash
+   flutter pub add http
+   flutter pub add provider
+   ```
+
+3. **Créer les modèles de données** dans `lib/models/` :
+   ```dart
+   class Service {
+     final String id;
+     final String title;
+     final String description;
+     // ...
+   }
+   ```
+
+4. **Implémenter le service API** dans `lib/services/api_service.dart` :
+   ```dart
+   class ApiService {
+     Future<List<Service>> getServices() async {
+       final response = await http.get(Uri.parse('$baseUrl/services'));
+       return json.decode(response.body).map((json) => Service.fromJson(json)).toList();
+     }
+   }
+   ```
+
+5. **Créer le provider** dans `lib/providers/app_provider.dart` :
+   ```dart
+   class AppProvider extends ChangeNotifier {
+     List<Service> _services = [];
+     List<Service> get services => _services;
+
+     Future<void> fetchServices() async {
+       _services = await _apiService.getServices();
+       notifyListeners();
+     }
+   }
+   ```
+
+6. **Utiliser dans l'UI** :
+   ```dart
+   final appProvider = Provider.of<AppProvider>(context);
+   await appProvider.fetchServices();
+   ```
+
+### Mode Hors Ligne
+
+L'application supporte le mode hors ligne grâce au cache local :
+
+- Les données sont stockées localement après chaque récupération réussie
+- En cas d'erreur réseau, les données en cache sont utilisées
+- Le cache est implémenté via `LocalCacheService`
+
+### Gestion des Erreurs
+
+L'application gère les erreurs de manière gracieuse :
+
+- Les erreurs réseau affichent un message à l'utilisateur
+- Les données en cache sont utilisées comme fallback
+- Les erreurs d'authentification redirigent vers l'écran de connexion
 
 ## Support
 
