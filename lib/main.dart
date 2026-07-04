@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'constants.dart';
-import 'screens/home_screen.dart';
+import 'screens/main_screen.dart';
 import 'screens/services_screen.dart';
 import 'screens/products_screen.dart';
 import 'screens/contact_screen.dart';
@@ -63,7 +63,7 @@ class ProInformatiqueApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const SplashScreen(),
-        '/home': (context) => const HomeScreen(),
+        '/main': (context) => const MainScreen(),
         '/services': (context) => const ServicesScreen(),
         '/products': (context) => const ProductsScreen(),
         '/contact': (context) => const ContactScreen(),
