@@ -3,9 +3,14 @@ import 'package:provider/provider.dart';
 import 'constants.dart';
 import 'screens/main_screen.dart';
 import 'screens/services_screen.dart';
+import 'screens/service_detail_screen.dart';
 import 'screens/products_screen.dart';
+import 'screens/product_detail_screen.dart';
 import 'screens/contact_screen.dart';
 import 'screens/profile_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/search_screen.dart';
+import 'screens/cart_screen.dart';
 import 'screens/admin_login_screen.dart';
 import 'screens/admin_panel_screen.dart';
 import 'screens/cyber_cafe_screen.dart';
@@ -61,16 +66,51 @@ class ProInformatiqueApp extends StatelessWidget {
         ),
       ),
       initialRoute: '/',
-      routes: {
-        '/': (context) => const SplashScreen(),
-        '/main': (context) => const MainScreen(),
-        '/services': (context) => const ServicesScreen(),
-        '/products': (context) => const ProductsScreen(),
-        '/contact': (context) => const ContactScreen(),
-        '/profile': (context) => const ProfileScreen(),
-        '/admin_login': (context) => const AdminLoginScreen(),
-        '/admin_panel': (context) => const AdminPanelScreen(),
-        '/cyber_cafe': (context) => const CyberCafeScreen(),
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(builder: (_) => const SplashScreen());
+          case '/main':
+            return MaterialPageRoute(builder: (_) => const MainScreen());
+          case '/services':
+            return MaterialPageRoute(builder: (_) => const ServicesScreen());
+          case '/products':
+            return MaterialPageRoute(builder: (_) => const ProductsScreen());
+          case '/contact':
+            return MaterialPageRoute(builder: (_) => const ContactScreen());
+          case '/profile':
+            return MaterialPageRoute(builder: (_) => const ProfileScreen());
+          case '/settings':
+            return MaterialPageRoute(builder: (_) => const SettingsScreen());
+          case '/search':
+            return MaterialPageRoute(builder: (_) => const SearchScreen());
+          case '/cart':
+            return MaterialPageRoute(builder: (_) => const CartScreen());
+          case '/admin_login':
+            return MaterialPageRoute(builder: (_) => const AdminLoginScreen());
+          case '/admin_panel':
+            return MaterialPageRoute(builder: (_) => const AdminPanelScreen());
+          case '/cyber_cafe':
+            return MaterialPageRoute(builder: (_) => const CyberCafeScreen());
+          case '/service_detail':
+            final service = settings.arguments;
+            if (service != null) {
+              return MaterialPageRoute(
+                builder: (_) => ServiceDetailScreen(service: service as dynamic),
+              );
+            }
+            return MaterialPageRoute(builder: (_) => const MainScreen());
+          case '/product_detail':
+            final product = settings.arguments;
+            if (product != null) {
+              return MaterialPageRoute(
+                builder: (_) => ProductDetailScreen(product: product as dynamic),
+              );
+            }
+            return MaterialPageRoute(builder: (_) => const MainScreen());
+          default:
+            return MaterialPageRoute(builder: (_) => const MainScreen());
+        }
       },
     );
   }
