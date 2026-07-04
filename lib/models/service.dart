@@ -16,6 +16,7 @@ class Service {
     required this.features,
   });
 
+  // ignore: non_const_argument_for_const_parameter
   IconData get icon => IconData(iconCode, fontFamily: 'MaterialIcons');
 
   Map<String, dynamic> toMap() {
@@ -28,7 +29,6 @@ class Service {
     };
   }
 
-  // For SQLite (features stored as JSON string)
   factory Service.fromMap(Map<String, dynamic> map) {
     List<String> featureList;
     if (map['features'] is String) {
@@ -39,10 +39,10 @@ class Service {
       featureList = [];
     }
     return Service(
-      id: map['id'],
-      title: map['title'],
-      description: map['description'],
-      iconCode: map['icon_code'],
+      id: map['id'] ?? '',
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      iconCode: map['icon_code'] ?? 0xe1af,
       features: featureList,
     );
   }
@@ -54,7 +54,7 @@ final List<Service> proServices = [
     title: 'Impression Grand Format',
     description:
         'Banderoles, affiches, roll-up et supports publicitaires en haute résolution pour votre communication terrain.',
-    iconCode: Icons.format_size.codePoint,
+    iconCode: 0xe299,
     features: [
       'Haute résolution',
       'Formats personnalisés',
@@ -67,7 +67,7 @@ final List<Service> proServices = [
     title: 'Cartes de Visite Premium',
     description:
         'Impression professionnelle de cartes de visite avec finitions mates ou brillantes et design personnalisé.',
-    iconCode: Icons.badge_outlined.codePoint,
+    iconCode: 0xe09e,
     features: [
       'Papier premium',
       'Finition mate ou brillante',
@@ -80,7 +80,7 @@ final List<Service> proServices = [
     title: 'Sérigraphie & Textile',
     description:
         'Personnalisation de t-shirts, casquettes et textiles avec une impression durable pour associations, écoles et entreprises.',
-    iconCode: Icons.checkroom_rounded.codePoint,
+    iconCode: 0xf636,
     features: [
       'Impression durable',
       'Tous textiles',
@@ -93,7 +93,7 @@ final List<Service> proServices = [
     title: 'Gadgets Personnalisés',
     description:
         'Mugs, gourdes, porte-clés, stylos et objets publicitaires personnalisés pour vos cadeaux de marque.',
-    iconCode: Icons.card_giftcard.codePoint,
+    iconCode: 0xe104,
     features: [
       'Large gamme',
       'Idéal cadeaux',
@@ -106,7 +106,7 @@ final List<Service> proServices = [
     title: 'Bureautique & Saisie',
     description:
         'Saisie de documents, mise en page, photocopie, scan et impression rapide pour dossiers administratifs et académiques.',
-    iconCode: Icons.description_rounded.codePoint,
+    iconCode: 0xf0671,
     features: [
       'Rapide et précis',
       'Tous formats',
@@ -119,7 +119,7 @@ final List<Service> proServices = [
     title: 'Cybercafé Haut Débit',
     description:
         'Connexion internet rapide, Wi-Fi, postes modernes et impression disponible sur place.',
-    iconCode: Icons.computer_rounded.codePoint,
+    iconCode: 0xf65b,
     features: [
       'Connexion rapide',
       'Postes modernes',

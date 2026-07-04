@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/service.dart';
 import '../models/product.dart';
 import '../models/review.dart';
@@ -8,15 +7,14 @@ import '../services/data_repository.dart';
 
 class AppProvider with ChangeNotifier {
   final DataRepository _repository = DataRepository();
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<Service> _services = [];
   List<Product> _products = [];
   List<Review> _reviews = [];
   List<CyberTicket> _cyberTickets = [];
   List<Computer> _computers = [];
-  bool _isLoading = false;
-  String _adminPassword = 'admin';
+  bool _isLoading = true;
+  String _adminPassword = 'admin'; // Mot de passe par défaut
 
   List<Service> get services => _services;
   List<Product> get products => _products;
@@ -24,6 +22,10 @@ class AppProvider with ChangeNotifier {
   List<CyberTicket> get cyberTickets => _cyberTickets;
   List<Computer> get computers => _computers;
   bool get isLoading => _isLoading;
+
+  AppProvider() {
+    fetchData();
+  }
 
   Future<void> fetchData() async {
     _isLoading = true;
@@ -35,52 +37,23 @@ class AppProvider with ChangeNotifier {
       _reviews = await _repository.getReviews();
       _cyberTickets = await _repository.getCyberTickets();
       _computers = await _repository.getComputers();
-      await fetchAdminPassword();
     } catch (e) {
       debugPrint('Error fetching data: $e');
-      _services = [];
-      _products = [];
-      _reviews = [];
-      _cyberTickets = [];
-      _computers = [];
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
-  Future<void> fetchAdminPassword() async {
-    try {
-      final doc = await _firestore.collection('settings').doc('admin').get();
-      if (doc.exists) {
-        _adminPassword = doc.data()?['password'] ?? 'admin';
-      } else {
-        // Initialize password if doesn't exist
-        await _firestore.collection('settings').doc('admin').set({
-          'password': 'admin',
-        });
-      }
-      notifyListeners();
-    } catch (e) {
-      debugPrint('Error fetching admin password: $e');
-    }
+  // --- Auth Methods ---
+  bool verifyAdminPassword(String password) {
+    return _adminPassword == password;
   }
 
   Future<void> changeAdminPassword(String newPassword) async {
-    try {
-      await _firestore.collection('settings').doc('admin').update({
-        'password': newPassword,
-      });
-      _adminPassword = newPassword;
-      notifyListeners();
-    } catch (e) {
-      debugPrint('Error changing admin password: $e');
-      rethrow;
-    }
-  }
-
-  bool verifyAdminPassword(String enteredPassword) {
-    return enteredPassword == _adminPassword;
+    // Dans une vraie app, on stockerait ça de manière sécurisée ou dans Firestore
+    _adminPassword = newPassword;
+    notifyListeners();
   }
 
   // --- Services CRUD ---
@@ -115,7 +88,7 @@ class AppProvider with ChangeNotifier {
     await fetchData();
   }
 
-  // --- Reviews ---
+  // --- Reviews CRUD ---
   Future<void> addReview(Review review) async {
     await _repository.addReview(review);
     await fetchData();
@@ -133,7 +106,7 @@ class AppProvider with ChangeNotifier {
   double getAverageRatingForProduct(String productId) {
     final productReviews = getReviewsForProduct(productId);
     if (productReviews.isEmpty) return 0.0;
-    final total = productReviews.fold<double>(0, (sum, r) => sum + r.rating);
+    final total = productReviews.fold<double>(0, (acc, r) => acc + r.rating);
     return total / productReviews.length;
   }
 
@@ -153,9 +126,19 @@ class AppProvider with ChangeNotifier {
     await fetchData();
   }
 
-  // --- Computers ---
+  // --- Computers CRUD ---
   Future<void> updateComputer(Computer computer) async {
     await _repository.updateComputer(computer);
     await fetchData();
+  }
+
+  Future<void> toggleComputerAvailability(String id) async {
+    final computer = _computers.firstWhere((c) => c.id == id);
+    final updated = Computer(
+      id: computer.id,
+      name: computer.name,
+      isAvailable: !computer.isAvailable,
+    );
+    await updateComputer(updated);
   }
 }

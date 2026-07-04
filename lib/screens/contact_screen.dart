@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 import '../constants.dart';
 import '../models/business_info.dart';
@@ -68,9 +69,11 @@ class _ContactScreenState extends State<ContactScreen>
 
     if (!await launchUrl(Uri.parse(url),
         mode: LaunchMode.externalApplication)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Impossible d\'ouvrir WhatsApp')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Impossible d\'ouvrir WhatsApp')),
+        );
+      }
     } else {
       _nameController.clear();
       _phoneController.clear();
@@ -107,21 +110,26 @@ class _ContactScreenState extends State<ContactScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Contactez-nous',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-      ),
+      appBar: kIsWeb
+          ? null
+          : AppBar(
+              title: const Text('Contactez-nous',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              backgroundColor: Colors.white,
+              elevation: 0,
+              centerTitle: true,
+            ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        padding: AppBreakpoints.pagePadding(context),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: AppBreakpoints.contentWidth(context)),
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildContactCard(
                   Icons.location_on_rounded,
@@ -196,6 +204,8 @@ class _ContactScreenState extends State<ContactScreen>
                   ),
                 ),
               ],
+                ),
+              ),
             ),
           ),
         ),

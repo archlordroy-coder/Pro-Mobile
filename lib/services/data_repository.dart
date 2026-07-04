@@ -1,27 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import '../models/service.dart';
 import '../models/product.dart';
 import '../models/review.dart';
 import '../models/cyber_session.dart';
+import 'api_service.dart';
 import 'local_cache_service.dart';
 
 class DataRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final ApiService _apiService = ApiService();
   final LocalCacheService _localCacheService = createLocalCacheService();
 
   // --- Services ---
 
   Future<List<Service>> getServices() async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('services').get();
-      final services = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Service.fromMap(data);
-      }).toList();
-
+      final services = await _apiService.getServices();
       await _localCacheService.syncServices(services);
       return services;
     } catch (e) {
@@ -32,10 +25,7 @@ class DataRepository {
 
   Future<void> addService(Service service) async {
     try {
-      await _firestore
-          .collection('services')
-          .doc(service.id)
-          .set(service.toMap());
+      await _apiService.addService(service);
     } catch (e) {
       debugPrint('Error adding service: $e');
     }
@@ -43,10 +33,7 @@ class DataRepository {
 
   Future<void> updateService(Service service) async {
     try {
-      await _firestore
-          .collection('services')
-          .doc(service.id)
-          .update(service.toMap());
+      await _apiService.updateService(service);
     } catch (e) {
       debugPrint('Error updating service: $e');
     }
@@ -54,7 +41,7 @@ class DataRepository {
 
   Future<void> deleteService(String id) async {
     try {
-      await _firestore.collection('services').doc(id).delete();
+      await _apiService.deleteService(id);
     } catch (e) {
       debugPrint('Error deleting service: $e');
     }
@@ -64,14 +51,7 @@ class DataRepository {
 
   Future<List<Product>> getProducts() async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('products').get();
-      final products = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Product.fromMap(data);
-      }).toList();
-
+      final products = await _apiService.getProducts();
       await _localCacheService.syncProducts(products);
       return products;
     } catch (e) {
@@ -82,10 +62,7 @@ class DataRepository {
 
   Future<void> addProduct(Product product) async {
     try {
-      await _firestore
-          .collection('products')
-          .doc(product.id)
-          .set(product.toMap());
+      await _apiService.addProduct(product);
     } catch (e) {
       debugPrint('Error adding product: $e');
     }
@@ -93,10 +70,7 @@ class DataRepository {
 
   Future<void> updateProduct(Product product) async {
     try {
-      await _firestore
-          .collection('products')
-          .doc(product.id)
-          .update(product.toMap());
+      await _apiService.updateProduct(product);
     } catch (e) {
       debugPrint('Error updating product: $e');
     }
@@ -104,7 +78,7 @@ class DataRepository {
 
   Future<void> deleteProduct(String id) async {
     try {
-      await _firestore.collection('products').doc(id).delete();
+      await _apiService.deleteProduct(id);
     } catch (e) {
       debugPrint('Error deleting product: $e');
     }
@@ -114,13 +88,7 @@ class DataRepository {
 
   Future<List<Review>> getReviews() async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('reviews').get();
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Review.fromMap(data);
-      }).toList();
+      return await _apiService.getReviews();
     } catch (e) {
       debugPrint('Error getting reviews: $e');
       return [];
@@ -129,15 +97,7 @@ class DataRepository {
 
   Future<List<Review>> getReviewsForProduct(String productId) async {
     try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('reviews')
-          .where('product_id', isEqualTo: productId)
-          .get();
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Review.fromMap(data);
-      }).toList();
+      return await _apiService.getReviewsForProduct(productId);
     } catch (e) {
       debugPrint('Error getting reviews for product: $e');
       return [];
@@ -146,7 +106,7 @@ class DataRepository {
 
   Future<void> addReview(Review review) async {
     try {
-      await _firestore.collection('reviews').doc(review.id).set(review.toMap());
+      await _apiService.addReview(review);
     } catch (e) {
       debugPrint('Error adding review: $e');
     }
@@ -154,7 +114,7 @@ class DataRepository {
 
   Future<void> deleteReview(String id) async {
     try {
-      await _firestore.collection('reviews').doc(id).delete();
+      await _apiService.deleteReview(id);
     } catch (e) {
       debugPrint('Error deleting review: $e');
     }
@@ -164,14 +124,7 @@ class DataRepository {
 
   Future<List<CyberTicket>> getCyberTickets() async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('cyber_tickets').get();
-      final tickets = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return CyberTicket.fromMap(data);
-      }).toList();
-      return tickets;
+      return await _apiService.getCyberTickets();
     } catch (e) {
       debugPrint('Error getting cyber tickets: $e');
       return [];
@@ -180,10 +133,7 @@ class DataRepository {
 
   Future<void> addCyberTicket(CyberTicket ticket) async {
     try {
-      await _firestore
-          .collection('cyber_tickets')
-          .doc(ticket.id)
-          .set(ticket.toMap());
+      await _apiService.addCyberTicket(ticket);
     } catch (e) {
       debugPrint('Error adding ticket: $e');
     }
@@ -191,10 +141,7 @@ class DataRepository {
 
   Future<void> updateCyberTicket(CyberTicket ticket) async {
     try {
-      await _firestore
-          .collection('cyber_tickets')
-          .doc(ticket.id)
-          .update(ticket.toMap());
+      await _apiService.updateCyberTicket(ticket);
     } catch (e) {
       debugPrint('Error updating ticket: $e');
     }
@@ -202,7 +149,7 @@ class DataRepository {
 
   Future<void> deleteCyberTicket(String id) async {
     try {
-      await _firestore.collection('cyber_tickets').doc(id).delete();
+      await _apiService.deleteCyberTicket(id);
     } catch (e) {
       debugPrint('Error deleting ticket: $e');
     }
@@ -212,14 +159,7 @@ class DataRepository {
 
   Future<List<Computer>> getComputers() async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('computers').get();
-      final computers = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        return Computer.fromMap(data);
-      }).toList();
-      return computers;
+      return await _apiService.getComputers();
     } catch (e) {
       debugPrint('Error getting computers: $e');
       return [];
@@ -228,10 +168,7 @@ class DataRepository {
 
   Future<void> updateComputer(Computer computer) async {
     try {
-      await _firestore
-          .collection('computers')
-          .doc(computer.id)
-          .update(computer.toMap());
+      await _apiService.updateComputer(computer);
     } catch (e) {
       debugPrint('Error updating computer: $e');
     }

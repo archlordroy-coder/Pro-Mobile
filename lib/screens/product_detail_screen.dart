@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../constants.dart';
 import '../models/product.dart';
 import '../models/business_info.dart';
@@ -19,8 +17,6 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   late List<Review> productReviews;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -41,18 +37,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Future<void> _addReview() async {
-    User? user = _auth.currentUser;
-    if (user == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Connectez-vous pour laisser un avis')),
-        );
-      }
-      return;
-    }
-
+    // Pour l'instant, on permet d'ajouter un avis sans authentification
+    // L'authentification sera gérée par le backend API
     double rating = 5;
     String comment = '';
+    String userName = 'Utilisateur anonyme';
+
     if (!mounted) return;
 
     showDialog(
@@ -63,6 +53,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              TextField(
+                onChanged: (val) => userName = val,
+                decoration: const InputDecoration(labelText: 'Votre nom'),
+              ),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(5, (index) {
@@ -87,28 +82,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 child: const Text('Annuler')),
             ElevatedButton(
               onPressed: () async {
-                if (comment.isNotEmpty) {
+                if (comment.isNotEmpty && userName.isNotEmpty) {
                   final newReview = Review(
                     id: DateTime.now().millisecondsSinceEpoch.toString(),
                     productId: widget.product.id,
-                    userId: user.uid,
-                    userName: user.displayName ?? user.email ?? 'Utilisateur',
+                    userId: 'anonymous',
+                    userName: userName,
                     rating: rating,
                     comment: comment,
                     timestamp: DateTime.now(),
                   );
 
-                  await _firestore
-                      .collection('reviews')
-                      .doc(newReview.id)
-                      .set(newReview.toMap());
+                  await context.read<AppProvider>().addReview(newReview);
 
                   if (mounted) {
-                    context.read<AppProvider>().fetchData();
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Avis ajouté !')),
-                    );
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Avis ajouté !')),
+                      );
+                    }
                   }
                 }
               },

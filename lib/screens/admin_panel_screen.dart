@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../providers/app_provider.dart';
 import '../constants.dart';
 import '../models/service.dart';
@@ -19,7 +18,6 @@ class AdminPanelScreen extends StatefulWidget {
 class _AdminPanelScreenState extends State<AdminPanelScreen>
     with SingleTickerProviderStateMixin {
   int _currentView = 0; // 0: Services, 1: Products, 2: Cyber Café, 3: Reviews
-  bool _isPopulating = false;
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -41,7 +39,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
     _animationController.forward();
     // Fetch data on init
     Future.microtask(() {
-      context.read<AppProvider>().fetchData();
+      if (mounted) {
+        context.read<AppProvider>().fetchData();
+      }
     });
   }
 
@@ -49,77 +49,6 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
   void dispose() {
     _animationController.dispose();
     super.dispose();
-  }
-
-  Future<void> _populateFirestore() async {
-    setState(() => _isPopulating = true);
-    final firestore = FirebaseFirestore.instance;
-
-    try {
-      WriteBatch batch = firestore.batch();
-
-      for (var service in proServices) {
-        DocumentReference ref =
-            firestore.collection('services').doc(service.id);
-        batch.set(ref, service.toMap());
-      }
-
-      for (var product in proProducts) {
-        DocumentReference ref =
-            firestore.collection('products').doc(product.id);
-        batch.set(ref, product.toMap());
-      }
-
-      for (var ticket in proCyberTickets) {
-        DocumentReference ref =
-            firestore.collection('cyber_tickets').doc(ticket.id);
-        batch.set(ref, ticket.toMap());
-      }
-
-      for (var computer in proComputers) {
-        DocumentReference ref =
-            firestore.collection('computers').doc(computer.id);
-        batch.set(ref, computer.toMap());
-      }
-
-      for (var review in proReviews) {
-        DocumentReference ref = firestore.collection('reviews').doc(review.id);
-        batch.set(ref, review.toMap());
-      }
-
-      await batch.commit();
-
-      if (mounted) {
-        context.read<AppProvider>().fetchData();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Firestore peuplé avec succès !'),
-            backgroundColor: AppColors.primary,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erreur: $e'),
-            backgroundColor: AppColors.cardPink,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isPopulating = false);
-      }
-    }
   }
 
   @override
@@ -287,31 +216,6 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
                         onPressed: () => appProvider.fetchData(),
                         tooltip: 'Actualiser',
                       ),
-                      const SizedBox(width: 8),
-                      ElevatedButton.icon(
-                        onPressed: _isPopulating ? null : _populateFirestore,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.cardTeal,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          elevation: 0,
-                        ),
-                        icon: _isPopulating
-                            ? const SizedBox(
-                                height: 18,
-                                width: 18,
-                                child: CircularProgressIndicator(
-                                    color: Colors.white, strokeWidth: 2))
-                            : const Icon(Icons.upload_file, size: 20),
-                        label: const Text(
-                          'Peupler Firestore',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -461,30 +365,18 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
   }
 
   Widget _buildServicesTable(AppProvider provider, double width) {
-    final isLarge = width > 800;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (isLarge)
-          Expanded(
-            child: ListView.builder(
-              itemCount: provider.services.length,
-              itemBuilder: (context, index) {
-                final service = provider.services[index];
-                return _buildServiceCard(service);
-              },
-            ),
-          )
-        else
-          Expanded(
-            child: ListView.builder(
-              itemCount: provider.services.length,
-              itemBuilder: (context, index) {
-                final service = provider.services[index];
-                return _buildServiceCard(service);
-              },
-            ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: provider.services.length,
+            itemBuilder: (context, index) {
+              final service = provider.services[index];
+              return _buildServiceCard(service);
+            },
           ),
+        ),
       ],
     );
   }
@@ -513,7 +405,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
-            IconData(service.iconCode, fontFamily: 'MaterialIcons'),
+            service.icon,
             color: AppColors.primary,
             size: 28,
           ),
@@ -1230,14 +1122,22 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
                                   .addCyberTicket(newTicket);
                             }
                           }
-                          if (mounted) Navigator.pop(context);
+                          if (mounted) {
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          }
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Erreur: $e'),
-                              backgroundColor: AppColors.cardPink,
-                            ),
-                          );
+                          if (mounted) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Erreur: $e'),
+                                  backgroundColor: AppColors.cardPink,
+                                ),
+                              );
+                            }
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -1314,25 +1214,33 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
 
   Future<void> _deleteService(String id) async {
     if (await _confirmDelete('ce service')) {
-      await context.read<AppProvider>().deleteService(id);
+      if (mounted) {
+        await context.read<AppProvider>().deleteService(id);
+      }
     }
   }
 
   Future<void> _deleteProduct(String id) async {
     if (await _confirmDelete('ce produit')) {
-      await context.read<AppProvider>().deleteProduct(id);
+      if (mounted) {
+        await context.read<AppProvider>().deleteProduct(id);
+      }
     }
   }
 
   Future<void> _deleteTicket(String id) async {
     if (await _confirmDelete('ce ticket')) {
-      await context.read<AppProvider>().deleteCyberTicket(id);
+      if (mounted) {
+        await context.read<AppProvider>().deleteCyberTicket(id);
+      }
     }
   }
 
   Future<void> _deleteReview(String id) async {
     if (await _confirmDelete('cet avis')) {
-      await context.read<AppProvider>().deleteReview(id);
+      if (mounted) {
+        await context.read<AppProvider>().deleteReview(id);
+      }
     }
   }
 
@@ -1432,7 +1340,9 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
       currentUser: !computer.isAvailable ? null : computer.currentUser,
       endTime: !computer.isAvailable ? null : computer.endTime,
     );
-    await context.read<AppProvider>().updateComputer(updatedComputer);
+    if (mounted) {
+      await context.read<AppProvider>().updateComputer(updatedComputer);
+    }
   }
 
   void _showChangePasswordDialog() {
@@ -1669,12 +1579,12 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
                                             .read<AppProvider>()
                                             .changeAdminPassword(
                                                 newPasswordController.text);
-                                        if (mounted) {
+                                        if (context.mounted) {
                                           Navigator.pop(context);
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
+                                            SnackBar(
+                                              content: const Text(
                                                   'Mot de passe changé avec succès!'),
                                               backgroundColor:
                                                   AppColors.primary,
@@ -1688,7 +1598,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen>
                                           );
                                         }
                                       } catch (e) {
-                                        if (mounted) {
+                                        if (context.mounted) {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             SnackBar(

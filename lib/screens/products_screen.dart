@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../providers/app_provider.dart';
@@ -34,39 +35,38 @@ class _ProductsScreenState extends State<ProductsScreen>
   @override
   Widget build(BuildContext context) {
     final appProvider = Provider.of<AppProvider>(context);
-    final width = MediaQuery.of(context).size.width;
     int crossAxisCount = 2;
     double childAspectRatio = 0.75;
-    if (width > 1200) {
+    if (AppBreakpoints.isDesktop(context)) {
       crossAxisCount = 4;
-      childAspectRatio = 0.75;
-    } else if (width > 800) {
+    } else if (AppBreakpoints.isTablet(context)) {
       crossAxisCount = 3;
-      childAspectRatio = 0.75;
-    } else if (width > 600) {
-      crossAxisCount = 2;
-      childAspectRatio = 0.8;
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Nos Produits',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-      ),
+      appBar: kIsWeb
+          ? null
+          : AppBar(
+              title: const Text('Nos Produits',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              backgroundColor: Colors.white,
+              elevation: 0,
+              centerTitle: true,
+            ),
       body: appProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: () => appProvider.fetchData(),
-              child: GridView.builder(
-                padding: const EdgeInsets.all(24),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  childAspectRatio: childAspectRatio,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: AppBreakpoints.contentWidth(context)),
+                  child: GridView.builder(
+                    padding: AppBreakpoints.pagePadding(context),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      childAspectRatio: childAspectRatio,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
                 ),
                 itemCount: appProvider.products.length,
                 itemBuilder: (context, index) {
@@ -208,6 +208,8 @@ class _ProductsScreenState extends State<ProductsScreen>
                     ),
                   );
                 },
+              ),
+                ),
               ),
             ),
     );
