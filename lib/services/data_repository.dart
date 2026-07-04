@@ -3,6 +3,7 @@ import '../models/service.dart';
 import '../models/product.dart';
 import '../models/review.dart';
 import '../models/cyber_session.dart';
+import '../models/promotion.dart';
 import 'api_service.dart';
 import 'local_cache_service.dart';
 
@@ -171,6 +172,46 @@ class DataRepository {
       await _apiService.updateComputer(computer);
     } catch (e) {
       debugPrint('Error updating computer: $e');
+    }
+  }
+
+  // --- Promotions ---
+
+  Future<List<Promotion>> getPromotions() async {
+    try {
+      final promotions = await _apiService.getPromotions();
+      await _localCacheService.cachePromotions(promotions);
+      return promotions;
+    } catch (e) {
+      debugPrint('Error getting promotions from API, using cache: $e');
+      return await _localCacheService.getCachedPromotions();
+    }
+  }
+
+  Future<void> addPromotion(Promotion promotion) async {
+    try {
+      await _apiService.addPromotion(promotion);
+      await _localCacheService.cachePromotions(await _apiService.getPromotions());
+    } catch (e) {
+      debugPrint('Error adding promotion: $e');
+    }
+  }
+
+  Future<void> updatePromotion(Promotion promotion) async {
+    try {
+      await _apiService.updatePromotion(promotion);
+      await _localCacheService.cachePromotions(await _apiService.getPromotions());
+    } catch (e) {
+      debugPrint('Error updating promotion: $e');
+    }
+  }
+
+  Future<void> deletePromotion(String id) async {
+    try {
+      await _apiService.deletePromotion(id);
+      await _localCacheService.cachePromotions(await _apiService.getPromotions());
+    } catch (e) {
+      debugPrint('Error deleting promotion: $e');
     }
   }
 }

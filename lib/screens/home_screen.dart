@@ -627,6 +627,13 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildPromotionBanner() {
+    final appProvider = Provider.of<AppProvider>(context);
+    final promotions = appProvider.promotions;
+    
+    if (promotions.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    
     return CarouselSlider(
       options: CarouselOptions(
         height: 200,
@@ -635,7 +642,7 @@ class _HomeScreenState extends State<HomeScreen>
         viewportFraction: 1.0,
         autoPlayInterval: const Duration(seconds: 6),
       ),
-      items: proPromotions.map((promo) {
+      items: promotions.map((promo) {
         return Container(
           width: double.infinity,
           decoration: BoxDecoration(

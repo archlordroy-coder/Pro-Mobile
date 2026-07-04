@@ -5,6 +5,7 @@ import '../models/service.dart';
 import '../models/product.dart';
 import '../models/review.dart';
 import '../models/cyber_session.dart';
+import '../models/promotion.dart';
 
 class ApiService {
   final String baseUrl = 'https://api.proinformatique.dev';
@@ -251,6 +252,46 @@ class ApiService {
       await _put('/computers/${computer.id}', computer.toMap());
     } catch (e) {
       debugPrint('Error updating computer: $e');
+    }
+  }
+
+  // --- Promotions ---
+
+  Future<List<Promotion>> getPromotions() async {
+    try {
+      final response = await _get('/promotions');
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) => Promotion.fromMap(json)).toList();
+      }
+      return [];
+    } catch (e) {
+      debugPrint('Error getting promotions: $e');
+      return [];
+    }
+  }
+
+  Future<void> addPromotion(Promotion promotion) async {
+    try {
+      await _post('/promotions', promotion.toMap());
+    } catch (e) {
+      debugPrint('Error adding promotion: $e');
+    }
+  }
+
+  Future<void> updatePromotion(Promotion promotion) async {
+    try {
+      await _put('/promotions/${promotion.id}', promotion.toMap());
+    } catch (e) {
+      debugPrint('Error updating promotion: $e');
+    }
+  }
+
+  Future<void> deletePromotion(String id) async {
+    try {
+      await _delete('/promotions/$id');
+    } catch (e) {
+      debugPrint('Error deleting promotion: $e');
     }
   }
 }

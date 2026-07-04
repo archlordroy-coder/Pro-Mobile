@@ -3,6 +3,7 @@ import '../models/service.dart';
 import '../models/product.dart';
 import '../models/review.dart';
 import '../models/cyber_session.dart';
+import '../models/promotion.dart';
 import '../services/data_repository.dart';
 
 class AppProvider with ChangeNotifier {
@@ -13,6 +14,7 @@ class AppProvider with ChangeNotifier {
   List<Review> _reviews = [];
   List<CyberTicket> _cyberTickets = [];
   List<Computer> _computers = [];
+  List<Promotion> _promotions = [];
   bool _isLoading = true;
   String _adminPassword = 'admin'; // Mot de passe par défaut
 
@@ -21,6 +23,7 @@ class AppProvider with ChangeNotifier {
   List<Review> get reviews => _reviews;
   List<CyberTicket> get cyberTickets => _cyberTickets;
   List<Computer> get computers => _computers;
+  List<Promotion> get promotions => _promotions;
   bool get isLoading => _isLoading;
 
   AppProvider() {
@@ -37,6 +40,7 @@ class AppProvider with ChangeNotifier {
       _reviews = await _repository.getReviews();
       _cyberTickets = await _repository.getCyberTickets();
       _computers = await _repository.getComputers();
+      _promotions = await _repository.getPromotions();
     } catch (e) {
       debugPrint('Error fetching data: $e');
     } finally {
@@ -140,5 +144,21 @@ class AppProvider with ChangeNotifier {
       isAvailable: !computer.isAvailable,
     );
     await updateComputer(updated);
+  }
+
+  // --- Promotions CRUD ---
+  Future<void> addPromotion(Promotion promotion) async {
+    await _repository.addPromotion(promotion);
+    await fetchData();
+  }
+
+  Future<void> updatePromotion(Promotion promotion) async {
+    await _repository.updatePromotion(promotion);
+    await fetchData();
+  }
+
+  Future<void> deletePromotion(String id) async {
+    await _repository.deletePromotion(id);
+    await fetchData();
   }
 }

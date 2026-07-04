@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../models/product.dart';
 import '../models/service.dart';
+import '../models/promotion.dart';
 import 'database_helper.dart';
 import 'local_cache_service.dart';
 
@@ -36,6 +37,28 @@ class SqfliteLocalCacheService implements LocalCacheService {
         );
       }
     });
+  }
+
+  @override
+  Future<void> cachePromotions(List<Promotion> promotions) async {
+    final db = await _dbHelper.database;
+    await db.transaction((txn) async {
+      await txn.delete('promotions');
+      for (final promotion in promotions) {
+        await txn.insert(
+          'promotions',
+          promotion.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    });
+  }
+
+  @override
+  Future<List<Promotion>> getCachedPromotions() async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('promotions');
+    return maps.map((map) => Promotion.fromMap(map)).toList();
   }
 }
 
