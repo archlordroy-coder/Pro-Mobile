@@ -11,6 +11,7 @@ import 'screens/profile_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/cart_screen.dart';
+import 'screens/auth_screen.dart';
 import 'screens/admin_login_screen.dart';
 import 'screens/admin_panel_screen.dart';
 import 'screens/cyber_cafe_screen.dart';
@@ -70,6 +71,8 @@ class ProInformatiqueApp extends StatelessWidget {
         switch (settings.name) {
           case '/':
             return MaterialPageRoute(builder: (_) => const SplashScreen());
+          case '/auth':
+            return MaterialPageRoute(builder: (_) => const AuthScreen());
           case '/main':
             return MaterialPageRoute(builder: (_) => const MainScreen());
           case '/services':

@@ -33,13 +33,13 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     );
     _controller.forward();
-    _navigateToHome();
+    _navigateToAuth();
   }
 
-  _navigateToHome() async {
+  _navigateToAuth() async {
     await Future.delayed(const Duration(milliseconds: 3000));
     if (!mounted) return;
-    Navigator.pushReplacementNamed(context, '/main');
+    Navigator.pushReplacementNamed(context, '/auth');
   }
 
   @override

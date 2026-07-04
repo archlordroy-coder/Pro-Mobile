@@ -16,7 +16,9 @@ class AppProvider with ChangeNotifier {
   List<Computer> _computers = [];
   List<Promotion> _promotions = [];
   bool _isLoading = true;
-  String _adminPassword = 'admin'; // Mot de passe par défaut
+  String _adminPassword = 'admin';
+  bool _isLoggedIn = false;
+  Map<String, dynamic>? _currentUser;
 
   List<Service> get services => _services;
   List<Product> get products => _products;
@@ -25,6 +27,8 @@ class AppProvider with ChangeNotifier {
   List<Computer> get computers => _computers;
   List<Promotion> get promotions => _promotions;
   bool get isLoading => _isLoading;
+  bool get isLoggedIn => _isLoggedIn;
+  Map<String, dynamic>? get currentUser => _currentUser;
 
   AppProvider() {
     fetchData();
@@ -55,8 +59,26 @@ class AppProvider with ChangeNotifier {
   }
 
   Future<void> changeAdminPassword(String newPassword) async {
-    // Dans une vraie app, on stockerait ça de manière sécurisée ou dans Firestore
     _adminPassword = newPassword;
+    notifyListeners();
+  }
+
+  Future<void> login(String email, String password) async {
+    // Call API for login
+    final response = await _repository.login(email, password);
+    _isLoggedIn = true;
+    _currentUser = response;
+    notifyListeners();
+  }
+
+  Future<void> register(String name, String email, String password) async {
+    // Call API for registration
+    await _repository.register(name, email, password);
+  }
+
+  void logout() {
+    _isLoggedIn = false;
+    _currentUser = null;
     notifyListeners();
   }
 

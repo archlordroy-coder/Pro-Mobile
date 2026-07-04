@@ -294,4 +294,40 @@ class ApiService {
       debugPrint('Error deleting promotion: $e');
     }
   }
+
+  // --- Authentication ---
+
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    try {
+      final response = await _post('/auth/login', {
+        'email': email,
+        'password': password,
+      });
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data;
+      } else {
+        throw Exception('Login failed');
+      }
+    } catch (e) {
+      debugPrint('Error logging in: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> register(String name, String email, String password) async {
+    try {
+      final response = await _post('/auth/register', {
+        'name': name,
+        'email': email,
+        'password': password,
+      });
+      if (response.statusCode != 201) {
+        throw Exception('Registration failed');
+      }
+    } catch (e) {
+      debugPrint('Error registering: $e');
+      rethrow;
+    }
+  }
 }

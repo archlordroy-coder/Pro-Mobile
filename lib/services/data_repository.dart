@@ -214,4 +214,25 @@ class DataRepository {
       debugPrint('Error deleting promotion: $e');
     }
   }
+
+  // --- Authentication ---
+
+  Future<Map<String, dynamic>> login(String email, String password) async {
+    try {
+      final response = await _apiService.login(email, password);
+      return response;
+    } catch (e) {
+      debugPrint('Error logging in: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> register(String name, String email, String password) async {
+    try {
+      await _apiService.register(name, email, password);
+    } catch (e) {
+      debugPrint('Error registering: $e');
+      rethrow;
+    }
+  }
 }
