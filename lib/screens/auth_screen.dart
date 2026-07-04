@@ -284,6 +284,19 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/main');
+                    },
+                    child: const Text(
+                      'Continuer sans compte',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
